@@ -23,6 +23,7 @@ public class GameEngine
     private static final int TICKS_PER_SECOND = 60;
 
     private static Sprite sprites[] = new Sprite[MAX_SPRITES];
+    private static Bitmap backdrop;
     private static GameView gameView;
     private static State currState;
 
@@ -41,6 +42,12 @@ public class GameEngine
         @Override
         public void onDraw(Canvas canvas)
         {
+            if (backdrop != null)
+            {
+                Rect srcRect = new Rect(0, 0, backdrop.getWidth(), backdrop.getHeight());
+                Rect destRect = new Rect(0, 0, getWidth(), getHeight());
+                canvas.drawBitmap(backdrop, srcRect, destRect, paint);
+            }
             for (Sprite sprite : GameEngine.sprites)
             {
                 if (sprite.active)
@@ -107,6 +114,11 @@ public class GameEngine
         MainThread thread = new MainThread();
 
         thread.start();
+    }
+
+    public static void setBackdrop(Bitmap bitmap)
+    {
+        backdrop = bitmap;
     }
 
     public static Sprite createSprite(Bitmap spriteSheet, int animSeq[][], int x, int y, int width, int height)

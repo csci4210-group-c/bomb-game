@@ -8,6 +8,7 @@ import com.csci4210.engine.State;
 
 public class MainActivity extends Activity
 {
+    private State title = new Title();
     private State testState = new TestState();
 
     @Override
@@ -18,7 +19,7 @@ public class MainActivity extends Activity
         GameResources.load(this);
 
         GameEngine.init(this);
-        GameEngine.setState(testState);
+        GameEngine.setState(title);
         GameEngine.mainLoop();
     }
 }
