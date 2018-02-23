@@ -14,8 +14,8 @@ public class TitleState extends State{
 
     public void enter(){
         GameEngine.setBackdrop(GameResources.titleBackground);
-        GameEngine.createButton(500, 100, 200, 50, "Start", BUTTON_START);
-        GameEngine.createButton(500, 300, 200, 50, "Start", BUTTON_START);
+        GameEngine.createButton(300, 300, 300, 100, "Start", BUTTON_START);
+        GameEngine.createButton(300, 500, 300, 100, "Start", BUTTON_START);
     }
 
     public void exit(){

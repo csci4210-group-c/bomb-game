@@ -85,7 +85,6 @@ public class GameEngine
             return true;
         }
 
-        @Override
         public void onBackPressed()
         {
             currState.onBackPressed();
@@ -171,7 +170,8 @@ public class GameEngine
     {
         for (int i = 0; i < buttons.length; i++)
         {
-            if (buttons[i] == null) {
+            if (buttons[i] == null)
+            {
                 buttons[i] = new Button(x, y, width, height, label, id);
                 return;
             }
