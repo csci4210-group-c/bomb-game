@@ -28,12 +28,11 @@ class GameResources
         {ANIMCMD_GOTO,  0},
     };
 
-
-
     static void load(Context context)
     {
         Resources rsrc = context.getResources();
         BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inScaled = false;
         titleBackground = BitmapFactory.decodeResource(rsrc, R.drawable.dark_background, opts);
         bomberSpriteSheetUp    = BitmapFactory.decodeResource(rsrc, R.drawable.bomber_up,    opts);
         bomberSpriteSheetDown  = BitmapFactory.decodeResource(rsrc, R.drawable.bomber_down,  opts);

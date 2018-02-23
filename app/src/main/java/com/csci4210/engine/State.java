@@ -20,4 +20,12 @@ public abstract class State
     public void update()
     {
     }
+
+    public void onTouch(int x, int y)
+    {
+    }
+
+    public void onBackPressed()
+    {
+    }
 }
