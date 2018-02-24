@@ -63,4 +63,9 @@ class TestState extends State
             break;
         }
     }
+
+    public void onBackPressed()
+    {
+        GameEngine.setState(MainActivity.title);
+    }
 }

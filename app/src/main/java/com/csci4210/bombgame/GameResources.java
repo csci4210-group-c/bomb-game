@@ -17,6 +17,7 @@ class GameResources
     static Bitmap bomberSpriteSheetDown;
     static Bitmap bomberSpriteSheetLeft;
     static Bitmap bomberSpriteSheetRight;
+    static Bitmap titleBackground;
 
     static final int bomberWalkAnimSeq[][] =
     {
@@ -31,7 +32,8 @@ class GameResources
     {
         Resources rsrc = context.getResources();
         BitmapFactory.Options opts = new BitmapFactory.Options();
-
+        opts.inScaled = false;
+        titleBackground = BitmapFactory.decodeResource(rsrc, R.drawable.dark_background, opts);
         bomberSpriteSheetUp    = BitmapFactory.decodeResource(rsrc, R.drawable.bomber_up,    opts);
         bomberSpriteSheetDown  = BitmapFactory.decodeResource(rsrc, R.drawable.bomber_down,  opts);
         bomberSpriteSheetLeft  = BitmapFactory.decodeResource(rsrc, R.drawable.bomber_left,  opts);

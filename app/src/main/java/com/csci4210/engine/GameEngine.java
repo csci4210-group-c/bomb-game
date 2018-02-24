@@ -10,7 +10,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.SystemClock;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 public class GameEngine
@@ -20,9 +23,15 @@ public class GameEngine
     public static final int CELL_HEIGHT = 32;
     */
     private static final int MAX_SPRITES = 16;
+    private static final int MAX_BUTTONS = 12;
     private static final int TICKS_PER_SECOND = 60;
 
+    public static int screenWidth;
+    public static int screenHeight;
+
     private static Sprite sprites[] = new Sprite[MAX_SPRITES];
+    private static Button buttons[] = new Button[MAX_BUTTONS];
+    private static Bitmap backdrop;
     private static GameView gameView;
     private static State currState;
 
@@ -35,12 +44,20 @@ public class GameEngine
         {
             super(context);
             paint = new Paint();
+            paint.setColor(Color.rgb(255, 255, 255));
             this.setBackgroundColor(Color.DKGRAY);
         }
 
         @Override
         public void onDraw(Canvas canvas)
         {
+            if (backdrop != null)
+            {
+                Rect srcRect = new Rect(0, 0, backdrop.getWidth(), backdrop.getHeight());
+                Rect destRect = new Rect(0, 0, GameEngine.screenWidth, GameEngine.screenHeight);
+                canvas.drawBitmap(backdrop, srcRect, destRect, paint);
+            }
+
             for (Sprite sprite : GameEngine.sprites)
             {
                 if (sprite.active)
@@ -52,6 +69,26 @@ public class GameEngine
                             paint);
                 }
             }
+
+            for (Button button : GameEngine.buttons)
+            {
+                if (button != null)
+                    canvas.drawRect(button.getRect(), paint);
+            }
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent event)
+        {
+            if (event.getAction() == MotionEvent.ACTION_DOWN)
+                currState.onTouch((int)event.getX(), (int)event.getY());
+            return true;
+        }
+
+        @Override
+        public void onBackPressed()
+        {
+            currState.onBackPressed();
         }
     }
 
@@ -63,6 +100,8 @@ public class GameEngine
 
         // initialize Android view
         gameView = new GameView(activity);
+        screenWidth = gameView.getWidth();
+        screenHeight = gameView.getHeight();
         activity.setContentView(gameView);
     }
 
@@ -109,6 +148,11 @@ public class GameEngine
         thread.start();
     }
 
+    public static void setBackdrop(Bitmap bitmap)
+    {
+        backdrop = bitmap;
+    }
+
     public static Sprite createSprite(Bitmap spriteSheet, int animSeq[][], int x, int y, int width, int height)
     {
         for (Sprite sprite : sprites)
@@ -123,8 +167,40 @@ public class GameEngine
         return null;
     }
 
+    public static void createButton(int x, int y, int width, int height, String label, int id)
+    {
+        for (int i = 0; i < buttons.length; i++)
+        {
+            if (buttons[i] == null) {
+                buttons[i] = new Button(x, y, width, height, label, id);
+                return;
+            }
+        }
+    }
+
+    public static void destroyAllButtons()
+    {
+        for (int i = 0; i < buttons.length; i++)
+            buttons[i] = null;
+    }
+
     public static void destroySprite(Sprite toDestroy)
     {
         toDestroy.active = false;
+    }
+
+    public static int buttonHitTest(int x, int y)
+    {
+        for (Button button : GameEngine.buttons)
+        {
+            if (button != null)
+            {
+                Rect rect = button.getRect();
+
+                if (rect.contains(x, y))
+                    return button.id;
+            }
+        }
+        return -1;
     }
 }
