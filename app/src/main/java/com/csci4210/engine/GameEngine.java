@@ -100,6 +100,7 @@ public class GameEngine
 
         // initialize Android view
         gameView = new GameView(activity);
+        //getting view's default dimensions on runtime
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity)gameView.getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         screenWidth = displayMetrics.widthPixels;
