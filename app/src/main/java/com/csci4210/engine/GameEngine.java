@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.SystemClock;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,7 +46,7 @@ public class GameEngine
             super(context);
             paint = new Paint();
             paint.setColor(Color.rgb(255, 255, 255));
-            this.setBackgroundColor(Color.DKGRAY);
+            this.setBackgroundColor(Color.BLACK);
         }
 
         @Override
@@ -99,8 +100,10 @@ public class GameEngine
 
         // initialize Android view
         gameView = new GameView(activity);
-        screenWidth = gameView.getWidth();
-        screenHeight = gameView.getHeight();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity)gameView.getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        screenWidth = displayMetrics.widthPixels;
+        screenHeight = displayMetrics.heightPixels;
         activity.setContentView(gameView);
     }
 
@@ -143,7 +146,6 @@ public class GameEngine
     public static void mainLoop()
     {
         MainThread thread = new MainThread();
-
         thread.start();
     }
 
@@ -196,7 +198,6 @@ public class GameEngine
             if (button != null)
             {
                 Rect rect = button.getRect();
-
                 if (rect.contains(x, y))
                     return button.id;
             }
