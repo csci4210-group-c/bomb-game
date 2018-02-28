@@ -17,6 +17,8 @@ public class MainActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        if (savedInstanceState != null)
+            return;
         super.onCreate(savedInstanceState);
         Log.d("test", "Hello World");
 

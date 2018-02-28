@@ -25,6 +25,10 @@ public abstract class State
     {
     }
 
+    public void onButton(int buttonId)
+    {
+    }
+
     public void onBackPressed()
     {
     }

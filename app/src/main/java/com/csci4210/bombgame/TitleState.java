@@ -26,9 +26,9 @@ public class TitleState extends State{
 
     }
 
-    public void onTouch(int x, int y)
+    public void onButton(int buttonId)
     {
-        switch (GameEngine.buttonHitTest(x, y))
+        switch (buttonId)
         {
             case BUTTON_START:
                 GameEngine.setState(MainActivity.testState);
