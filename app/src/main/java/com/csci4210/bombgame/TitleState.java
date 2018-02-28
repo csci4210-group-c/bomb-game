@@ -20,6 +20,7 @@ public class TitleState extends State{
 
     public void exit(){
         GameEngine.destroyAllButtons();
+        GameEngine.setBackdrop(null);
     }
 
     public void update(){
