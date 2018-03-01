@@ -32,7 +32,7 @@ public class TitleState extends State{
         switch (buttonId)
         {
             case BUTTON_START:
-                GameEngine.setState(MainActivity.testState);
+                GameEngine.setState(MainActivity.battleState);
                 break;
             case BUTTON_QUIT:
                 GameEngine.setState(null);

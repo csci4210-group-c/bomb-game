@@ -72,6 +72,8 @@ public class Sprite
             switch (animSequence[animCmdIndex][0])
             {
                 case ANIMCMD_FRAME:
+                    if (animSequence[animCmdIndex][2] == 0)
+                        return;
                     if (animTimer > 0)
                     {
                         animTimer--;

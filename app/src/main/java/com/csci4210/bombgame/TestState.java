@@ -18,6 +18,8 @@ class TestState extends State
 
     public void enter()
     {
+        GameEngine.setTileSet(GameResources.tileSet);
+        GameEngine.setTileMap(GameResources.level1TileMap);
         bomberSprite = GameEngine.createSprite(
                 GameResources.bomberSpriteSheetRight,
                 GameResources.bomberWalkAnimSeq,
