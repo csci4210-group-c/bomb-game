@@ -80,10 +80,10 @@ class Bomber
     }
 }
 
-public class BattleState extends State{
+public class BattleState extends State
+{
     private Bomber player;
-    int touchX, touchY;
-    boolean isTouched = false;
+    Direction walkDir;
 
     public void enter()
     {
@@ -94,33 +94,37 @@ public class BattleState extends State{
 
     public void onTouchDown(int x, int y)
     {
-        touchX = x;
-        touchY = y;
-        isTouched = true;
+        walkDir = null;
+
+        x -= player.x + 16;
+        y -= player.y + 16;
+
+        if (Math.abs(x) > 16 || Math.abs(y) > 16)
+        {
+            if (x > y)  // up or right
+            {
+                if (x > -y)
+                    walkDir = Direction.RIGHT;
+                else
+                    walkDir = Direction.UP;
+            }
+            else // down or left
+            {
+                if (-x > y)
+                    walkDir = Direction.LEFT;
+                else
+                    walkDir = Direction.DOWN;
+            }
+        }
     }
 
     public void onTouchUp(int x, int y)
     {
-        isTouched = false;
-        player.isMoving = false;
+        walkDir = null;
     }
 
     public void update()
     {
-        if (isTouched)
-        {
-            if (touchX < player.x)
-            {
-                player.walk(Direction.LEFT);
-                return;
-            }
-            else if (touchX > player.x)
-            {
-                player.walk(Direction.RIGHT);
-                return;
-            }
-        }
-
-        player.walk(null);
+        player.walk(walkDir);
     }
 }

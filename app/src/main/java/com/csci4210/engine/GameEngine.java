@@ -127,12 +127,12 @@ public class GameEngine
         @Override
         public boolean onTouchEvent(MotionEvent event)
         {
+            int x = (int)event.getX();
+            int y = (int)event.getY();
+
             int action = event.getAction();
             if (action == MotionEvent.ACTION_DOWN)
             {
-                int x = (int)event.getX();
-                int y = (int)event.getY();
-
                 for (Button button : GameEngine.buttons)
                 {
                     if (button != null)
@@ -145,11 +145,11 @@ public class GameEngine
                         }
                     }
                 }
-                currState.onTouchDown((int)event.getX(), (int)event.getY());
+                currState.onTouchDown(x / GameEngine.displayScale, y / GameEngine.displayScale);
             }
             else if (action == MotionEvent.ACTION_UP)
             {
-                currState.onTouchUp((int)event.getX(), (int)event.getY());
+                currState.onTouchUp(x / GameEngine.displayScale, y / GameEngine.displayScale);
             }
 
             return true;
