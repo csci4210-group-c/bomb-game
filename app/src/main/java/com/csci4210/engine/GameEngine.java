@@ -9,8 +9,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Shader;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -19,10 +21,9 @@ import android.view.View;
 
 public class GameEngine
 {
-    /*
-    public static final int CELL_WIDTH = 32;
-    public static final int CELL_HEIGHT = 32;
-    */
+    private static int displayScale = 1;
+    public static final int TILE_WIDTH = 32;
+    public static final int TILE_HEIGHT = 32;
     private static final int MAX_SPRITES = 16;
     private static final int MAX_BUTTONS = 12;
     private static final int TICKS_PER_SECOND = 60;
@@ -30,11 +31,14 @@ public class GameEngine
     public static int screenWidth;
     public static int screenHeight;
 
+    private static Bitmap tileSet;
+    private static byte tileMap[][];
     private static Sprite sprites[] = new Sprite[MAX_SPRITES];
     private static Button buttons[] = new Button[MAX_BUTTONS];
     private static Bitmap backdrop;
     private static GameView gameView;
     private static State currState;
+    private static Button pushedButton;
 
     static class GameView extends View
     {
@@ -46,43 +50,113 @@ public class GameEngine
             super(context);
             paint = new Paint();
             paint.setColor(Color.rgb(255, 255, 255));
+            paint.setTextSize(20);
+            paint.setTextAlign(Paint.Align.CENTER);
             this.setBackgroundColor(Color.BLACK);
         }
 
         @Override
         public void onDraw(Canvas canvas)
         {
+            Rect srcRect = new Rect();
+            Rect destRect = new Rect();
+
+            // draw backdrop
             if (backdrop != null)
             {
-                Rect srcRect = new Rect(0, 0, backdrop.getWidth(), backdrop.getHeight());
-                Rect destRect = new Rect(0, 0, GameEngine.screenWidth, GameEngine.screenHeight);
+                srcRect.set(0, 0, backdrop.getWidth(), backdrop.getHeight());
+                destRect.set(0, 0, GameEngine.screenWidth, GameEngine.screenHeight);
                 canvas.drawBitmap(backdrop, srcRect, destRect, paint);
             }
 
+            // draw tilemap
+            if (tileMap != null && tileSet != null)
+            {
+                int tileWidth = TILE_WIDTH * displayScale;
+                int tileHeight = TILE_HEIGHT * displayScale;
+                int tileX, tileY;
+                int destX, destY;
+                int srcWidth = tileSet.getWidth();
+
+                for (tileX = 0; tileX < tileMap.length; tileX++)
+                {
+                    destX = tileX * tileWidth;
+                    for (tileY = 0; tileY < tileMap[tileX].length; tileY++)
+                    {
+                        byte tileId = tileMap[tileX][tileY];
+
+                        destY = tileY * tileHeight;
+                        destRect.set(destX, destY, destX + tileWidth, destY + tileHeight);
+                        srcRect.set(0, tileId * srcWidth, srcWidth, tileId * srcWidth + srcWidth);
+                        canvas.drawBitmap(tileSet, srcRect, destRect, paint);
+                    }
+                }
+            }
+
+            // draw sprites
             for (Sprite sprite : GameEngine.sprites)
             {
                 if (sprite.active)
                 {
+                    destRect = sprite.getDestRect();
+                    destRect.left *= displayScale;
+                    destRect.right *= displayScale;
+                    destRect.top *= displayScale;
+                    destRect.bottom *= displayScale;
                     canvas.drawBitmap(
                             sprite.spriteSheet,
                             sprite.getFrameSrcRect(),
-                            sprite.getDestRect(),
+                            destRect,
                             paint);
                 }
             }
 
+            // draw buttons
             for (Button button : GameEngine.buttons)
             {
                 if (button != null)
+                {
+                    boolean pushed = (button == pushedButton);
+
+                    paint.setShader(pushed ? button.pushedGradient : button.normalGradient);
                     canvas.drawRect(button.getRect(), paint);
+                    paint.setShader(null);
+                    paint.setColor(Color.WHITE);
+                    canvas.drawText(button.label, button.x, button.y + (pushed ? 2 * displayScale : 0), paint);
+                }
             }
         }
 
         @Override
         public boolean onTouchEvent(MotionEvent event)
         {
-            if (event.getAction() == MotionEvent.ACTION_DOWN)
-                currState.onTouch((int)event.getX(), (int)event.getY());
+            int x = (int)event.getX();
+            int y = (int)event.getY();
+
+            int action = event.getAction();
+            if (action == MotionEvent.ACTION_DOWN)
+            {
+                for (Button button : GameEngine.buttons)
+                {
+                    if (button != null && button.getRect().contains(x, y))
+                    {
+                        GameEngine.pushedButton = button;
+                        return true;
+                    }
+                }
+                currState.onTouchDown(x / GameEngine.displayScale, y / GameEngine.displayScale);
+            }
+            else if (action == MotionEvent.ACTION_UP)
+            {
+                if (pushedButton != null && pushedButton.getRect().contains(x, y))
+                    currState.onButton(pushedButton.id);
+                else
+                {
+                    pushedButton = null;
+                    currState.onTouchUp(x / GameEngine.displayScale, y / GameEngine.displayScale);
+                }
+            }
+
             return true;
         }
 
@@ -105,7 +179,38 @@ public class GameEngine
         ((Activity)gameView.getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         screenWidth = displayMetrics.widthPixels;
         screenHeight = displayMetrics.heightPixels;
+
+        int screenDimMax = Math.max(screenWidth, screenHeight);
+        if (screenDimMax > 1000)
+            displayScale = 2;
+
         activity.setContentView(gameView);
+    }
+
+    public static void setTileSet(Bitmap _tileSet)
+    {
+        tileSet = _tileSet;
+    }
+
+    /*
+    public static void initTileMap(int width, int height)
+    {
+        tileMap = new byte[width][height];
+    }
+    */
+    public static void setTileMap(byte[][] map)
+    {
+        tileMap = map;
+    }
+
+    public static byte getTile(int x, int y)
+    {
+        return tileMap[x][y];
+    }
+
+    public static void setTile(int x, int y, byte tile)
+    {
+        tileMap[x][y] = tile;
     }
 
     public static void setState(State state)
@@ -190,19 +295,5 @@ public class GameEngine
     public static void destroySprite(Sprite toDestroy)
     {
         toDestroy.active = false;
-    }
-
-    public static int buttonHitTest(int x, int y)
-    {
-        for (Button button : GameEngine.buttons)
-        {
-            if (button != null)
-            {
-                Rect rect = button.getRect();
-                if (rect.contains(x, y))
-                    return button.id;
-            }
-        }
-        return -1;
     }
 }

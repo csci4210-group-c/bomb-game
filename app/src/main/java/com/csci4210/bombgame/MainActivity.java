@@ -13,10 +13,13 @@ public class MainActivity extends Activity
 {
     static State title = new TitleState();
     static State testState = new TestState();
+    static State battleState = new BattleState();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        if (savedInstanceState != null)
+            return;
         super.onCreate(savedInstanceState);
         Log.d("test", "Hello World");
 

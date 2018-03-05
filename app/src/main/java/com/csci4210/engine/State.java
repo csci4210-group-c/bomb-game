@@ -21,7 +21,15 @@ public abstract class State
     {
     }
 
-    public void onTouch(int x, int y)
+    public void onTouchDown(int x, int y)
+    {
+    }
+
+    public  void onTouchUp(int x, int y)
+    {
+    }
+
+    public void onButton(int buttonId)
     {
     }
 

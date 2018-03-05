@@ -12,16 +12,20 @@ import com.csci4210.engine.State;
 class TestState extends State
 {
     enum Direction {UP, DOWN, LEFT, RIGHT};
+    final int BUTTON_BOMB = 0;
     private Sprite bomberSprite;
     private Direction movementDir = Direction.RIGHT;
 
     public void enter()
     {
+        GameEngine.setTileSet(GameResources.tileSet);
+        GameEngine.setTileMap(GameResources.level1TileMap);
         bomberSprite = GameEngine.createSprite(
                 GameResources.bomberSpriteSheetRight,
                 GameResources.bomberWalkAnimSeq,
                 100, 100,
                 32, 32);
+        GameEngine.createButton(GameEngine.screenWidth - 100, GameEngine.screenHeight - 100, 75, 75, "BOMB", BUTTON_BOMB);
     }
 
     public void exit()
