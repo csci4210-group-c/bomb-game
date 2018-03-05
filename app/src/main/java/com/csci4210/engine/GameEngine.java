@@ -38,6 +38,7 @@ public class GameEngine
     private static Bitmap backdrop;
     private static GameView gameView;
     private static State currState;
+    private static Button pushedButton;
 
     static class GameView extends View
     {
@@ -113,13 +114,15 @@ public class GameEngine
             // draw buttons
             for (Button button : GameEngine.buttons)
             {
-                //int gradientColors[] = {Color.WHITE, Color.BLACK};
-                if (button != null) {
-                    //paint.setShader(new LinearGradient(0, 0, 0, 1, gradientColors, null, Shader.TileMode.MIRROR));
-                    paint.setColor(Color.WHITE);
+                if (button != null)
+                {
+                    boolean pushed = (button == pushedButton);
+
+                    paint.setShader(pushed ? button.pushedGradient : button.normalGradient);
                     canvas.drawRect(button.getRect(), paint);
-                    paint.setColor(Color.BLACK);
-                    canvas.drawText(button.label, button.x, button.y, paint);
+                    paint.setShader(null);
+                    paint.setColor(Color.WHITE);
+                    canvas.drawText(button.label, button.x, button.y + (pushed ? 2 * displayScale : 0), paint);
                 }
             }
         }
@@ -127,29 +130,31 @@ public class GameEngine
         @Override
         public boolean onTouchEvent(MotionEvent event)
         {
+            int x = (int)event.getX();
+            int y = (int)event.getY();
+
             int action = event.getAction();
             if (action == MotionEvent.ACTION_DOWN)
             {
-                int x = (int)event.getX();
-                int y = (int)event.getY();
-
                 for (Button button : GameEngine.buttons)
                 {
-                    if (button != null)
+                    if (button != null && button.getRect().contains(x, y))
                     {
-                        Rect rect = button.getRect();
-                        if (rect.contains(x, y))
-                        {
-                            currState.onButton(button.id);
-                            return true;
-                        }
+                        GameEngine.pushedButton = button;
+                        return true;
                     }
                 }
-                currState.onTouchDown((int)event.getX(), (int)event.getY());
+                currState.onTouchDown(x / GameEngine.displayScale, y / GameEngine.displayScale);
             }
             else if (action == MotionEvent.ACTION_UP)
             {
-                currState.onTouchUp((int)event.getX(), (int)event.getY());
+                if (pushedButton != null && pushedButton.getRect().contains(x, y))
+                    currState.onButton(pushedButton.id);
+                else
+                {
+                    pushedButton = null;
+                    currState.onTouchUp(x / GameEngine.displayScale, y / GameEngine.displayScale);
+                }
             }
 
             return true;
