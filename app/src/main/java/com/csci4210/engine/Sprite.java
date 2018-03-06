@@ -110,6 +110,6 @@ public class Sprite
 
     Rect getDestRect()
     {
-        return new Rect(x, y, x + width, y + width);
+        return new Rect(x - width / 2, y - height / 2, x + width / 2, y + width / 2);
     }
 }

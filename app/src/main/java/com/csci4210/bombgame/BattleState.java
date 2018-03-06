@@ -96,8 +96,8 @@ public class BattleState extends State
     {
         walkDir = null;
 
-        x -= player.x + 16;
-        y -= player.y + 16;
+        x -= player.x;
+        y -= player.y;
 
         if (Math.abs(x) > 16 || Math.abs(y) > 16)
         {

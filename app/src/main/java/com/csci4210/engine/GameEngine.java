@@ -72,20 +72,20 @@ public class GameEngine
             // draw tilemap
             if (tileMap != null && tileSet != null)
             {
-                int tileWidth = TILE_WIDTH * displayScale;
-                int tileHeight = TILE_HEIGHT * displayScale;
+                int tileWidth = screenWidth/tileMap[0].length;// * displayScale;
+                int tileHeight = screenHeight/tileMap.length;// * displayScale;
                 int tileX, tileY;
                 int destX, destY;
                 int srcWidth = tileSet.getWidth();
 
-                for (tileX = 0; tileX < tileMap.length; tileX++)
+                for (tileY = 0; tileY < tileMap.length; tileY++)
                 {
-                    destX = tileX * tileWidth;
-                    for (tileY = 0; tileY < tileMap[tileX].length; tileY++)
+                    destY = tileY * tileHeight;
+                    for (tileX = 0; tileX < tileMap[tileY].length; tileX++)
                     {
-                        byte tileId = tileMap[tileX][tileY];
+                        byte tileId = tileMap[tileY][tileX];
 
-                        destY = tileY * tileHeight;
+                        destX = tileX * tileWidth;
                         destRect.set(destX, destY, destX + tileWidth, destY + tileHeight);
                         srcRect.set(0, tileId * srcWidth, srcWidth, tileId * srcWidth + srcWidth);
                         canvas.drawBitmap(tileSet, srcRect, destRect, paint);
