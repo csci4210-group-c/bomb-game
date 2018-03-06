@@ -21,10 +21,12 @@ public abstract class State
     {
     }
 
+    //called once screen is touched
     public void onTouchDown(int x, int y)
     {
     }
 
+    //called once touch ceases
     public  void onTouchUp(int x, int y)
     {
     }
