@@ -22,6 +22,8 @@ import android.view.View;
 public class GameEngine
 {
     private static int displayScale = 1;
+    public static int xoffset = 0;
+    public static int yoffset = 0;
     public static final int TILE_WIDTH = 32;
     public static final int TILE_HEIGHT = 32;
     private static final int MAX_SPRITES = 16;
@@ -72,20 +74,20 @@ public class GameEngine
             // draw tilemap
             if (tileMap != null && tileSet != null)
             {
-                int tileWidth = screenWidth/tileMap[0].length;// * displayScale;
-                int tileHeight = screenHeight/tileMap.length;// * displayScale;
+                int tileWidth = TILE_WIDTH* displayScale;
+                int tileHeight = TILE_HEIGHT* displayScale;
                 int tileX, tileY;
                 int destX, destY;
                 int srcWidth = tileSet.getWidth();
 
                 for (tileY = 0; tileY < tileMap.length; tileY++)
                 {
-                    destY = tileY * tileHeight;
+                    destY = yoffset * displayScale + tileY * tileHeight;
                     for (tileX = 0; tileX < tileMap[tileY].length; tileX++)
                     {
                         byte tileId = tileMap[tileY][tileX];
 
-                        destX = tileX * tileWidth;
+                        destX = xoffset * displayScale + tileX * tileWidth;
                         destRect.set(destX, destY, destX + tileWidth, destY + tileHeight);
                         srcRect.set(0, tileId * srcWidth, srcWidth, tileId * srcWidth + srcWidth);
                         canvas.drawBitmap(tileSet, srcRect, destRect, paint);
@@ -99,10 +101,11 @@ public class GameEngine
                 if (sprite.active)
                 {
                     destRect = sprite.getDestRect();
-                    destRect.left *= displayScale;
-                    destRect.right *= displayScale;
-                    destRect.top *= displayScale;
-                    destRect.bottom *= displayScale;
+                    destRect.left = (destRect.left + xoffset) * displayScale;
+                    destRect.right = (destRect.right + xoffset) * displayScale;
+                    destRect.top = (destRect.top + yoffset) * displayScale;
+                    destRect.bottom = (destRect.bottom + yoffset) * displayScale;
+
                     canvas.drawBitmap(
                             sprite.spriteSheet,
                             sprite.getFrameSrcRect(),
@@ -144,7 +147,7 @@ public class GameEngine
                         return true;
                     }
                 }
-                currState.onTouchDown(x / GameEngine.displayScale, y / GameEngine.displayScale);
+                currState.onTouchDown(x, y);
             }
             else if (action == MotionEvent.ACTION_UP)
             {
@@ -153,7 +156,7 @@ public class GameEngine
                 else
                 {
                     pushedButton = null;
-                    currState.onTouchUp(x / GameEngine.displayScale, y / GameEngine.displayScale);
+                    currState.onTouchUp(x, y);
                 }
             }
 
@@ -205,12 +208,15 @@ public class GameEngine
 
     public static byte getTile(int x, int y)
     {
-        return tileMap[x][y];
+        x /= GameEngine.TILE_WIDTH;
+        y /= GameEngine.TILE_HEIGHT;
+        if (y < tileMap.length && x < tileMap[0].length)
+        return tileMap[y][x];
     }
 
     public static void setTile(int x, int y, byte tile)
     {
-        tileMap[x][y] = tile;
+        tileMap[y][x] = tile;
     }
 
     public static void setState(State state)
@@ -295,5 +301,11 @@ public class GameEngine
     public static void destroySprite(Sprite toDestroy)
     {
         toDestroy.active = false;
+    }
+
+    public static void setCenterCoord(int x, int y)
+    {
+        xoffset = screenWidth / displayScale / 2 - x;
+        yoffset = screenHeight / displayScale / 2 - y;
     }
 }

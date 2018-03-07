@@ -47,6 +47,9 @@ class Bomber
 
     public void walk(Direction direction)
     {
+        int newx = x;
+        int newy = y;
+
         if (direction == null)  // not moving
         {
             isMoving = false;
@@ -59,22 +62,32 @@ class Bomber
         switch (direction)
         {
             case UP:
-                y--;
-                sprite.y = y;
+                newy--;
+                //sprite.y = y;
                 break;
             case DOWN:
-                y++;
-                sprite.y = y;
+                newy++;
+                //sprite.y = y;
                 break;
             case LEFT:
-                x--;
-                sprite.x = x;
+                newx--;
+                //sprite.x = x;
                 break;
             case RIGHT:
-                x++;
-                sprite.x = x;
+                newx++;
+                //sprite.x = x;
                 break;
         }
+
+        int tile = GameEngine.getTileAtCoord(newx, newy);
+        if (tile == GameResources.TILE_GRASS)
+        {
+            x = newx;
+            y = newy;
+            sprite.x = x;
+            sprite.y = y;
+        }
+
         sprite.animSequence = GameResources.bomberWalkAnimSeq;
         isMoving = true;
     }
@@ -96,8 +109,12 @@ public class BattleState extends State
     {
         walkDir = null;
 
+        /*
         x -= player.x;
         y -= player.y;
+        */
+        x -= GameEngine.screenWidth / 2;
+        y -= GameEngine.screenHeight / 2;
 
         if (Math.abs(x) > 16 || Math.abs(y) > 16)
         {
@@ -126,5 +143,6 @@ public class BattleState extends State
     public void update()
     {
         player.walk(walkDir);
+        GameEngine.setCenterCoord(player.x, player.y);
     }
 }
