@@ -4,15 +4,31 @@ import com.csci4210.engine.GameEngine;
 import com.csci4210.engine.Sprite;
 import com.csci4210.engine.State;
 
-enum Direction {UP, DOWN, LEFT, RIGHT};
+enum Direction {
+    UP, DOWN, LEFT, RIGHT;
+
+    public static Direction random()
+    {
+        switch ((int)(Math.random() * 4))
+        {
+            case 0: return UP;
+            case 1: return DOWN;
+            case 2: return LEFT;
+            case 3: return RIGHT;
+        }
+        // should not happen
+        return UP;
+    }
+}
 
 class Bomber
 {
+    final int WIDTH = 16;
+    final int HEIGHT = 16;
     Sprite sprite;
     int x;
     int y;
     Direction direction;
-    boolean isMoving = false;
 
     public void faceDirection(Direction direction)
     {
@@ -45,17 +61,16 @@ class Bomber
         faceDirection(Direction.DOWN);
     }
 
-    public void walk(Direction direction)
+    public boolean walk(Direction direction)
     {
         int newx = x;
         int newy = y;
 
         if (direction == null)  // not moving
         {
-            isMoving = false;
             sprite.animSequence = GameResources.bomberStillAnimSeq;
             sprite.animCmdIndex = 0;
-            return;
+            return false;
         }
 
         faceDirection(direction);
@@ -63,56 +78,66 @@ class Bomber
         {
             case UP:
                 newy--;
-                //sprite.y = y;
                 break;
             case DOWN:
                 newy++;
-                //sprite.y = y;
                 break;
             case LEFT:
                 newx--;
-                //sprite.x = x;
                 break;
             case RIGHT:
                 newx++;
-                //sprite.x = x;
                 break;
         }
 
-        int tile = GameEngine.getTileAtCoord(newx, newy);
-        if (tile == GameResources.TILE_GRASS)
+        sprite.animSequence = GameResources.bomberWalkAnimSeq;
+
+        // Do collision check with grid
+
+          // top left
+        if (GameEngine.getTileAtCoord(newx - WIDTH / 2, newy - HEIGHT / 2) == GameResources.TILE_GRASS
+         // top right
+         && GameEngine.getTileAtCoord(newx + WIDTH / 2, newy - HEIGHT / 2) == GameResources.TILE_GRASS
+         // bottom left
+         && GameEngine.getTileAtCoord(newx - WIDTH / 2, newy + HEIGHT / 2) == GameResources.TILE_GRASS
+         // bottom right
+         && GameEngine.getTileAtCoord(newx + WIDTH / 2, newy + HEIGHT / 2) == GameResources.TILE_GRASS)
         {
+            // was able to move
             x = newx;
             y = newy;
             sprite.x = x;
             sprite.y = y;
+            return true;
         }
-
-        sprite.animSequence = GameResources.bomberWalkAnimSeq;
-        isMoving = true;
+        else {
+            // was not able to move
+            return false;
+        }
     }
 }
 
 public class BattleState extends State
 {
     private Bomber player;
+    private Bomber enemy;
     Direction walkDir;
+    final int BUTTON_BOMB = 0;
 
     public void enter()
     {
+        GameEngine.createButton(GameEngine.screenWidth - 100, GameEngine.screenHeight - 100,
+                200, 200, "BOMB!", BUTTON_BOMB);
         GameEngine.setTileSet(GameResources.tileSet);
         GameEngine.setTileMap(GameResources.level1TileMap);
         player = new Bomber(50, 50);
+        enemy = new Bomber(120, 100);
     }
 
     public void onTouchDown(int x, int y)
     {
         walkDir = null;
 
-        /*
-        x -= player.x;
-        y -= player.y;
-        */
         x -= GameEngine.screenWidth / 2;
         y -= GameEngine.screenHeight / 2;
 
@@ -140,8 +165,24 @@ public class BattleState extends State
         walkDir = null;
     }
 
+    // simple dummy enemy movement
+    private Direction enemyDir;
+    private int enemySteps;
+    private void updateEnemy()
+    {
+        if (enemySteps == 0)
+        {
+            enemyDir = Direction.random();
+            enemySteps = (int)(Math.random() * 100);
+        }
+        if (!enemy.walk(enemyDir))
+            enemyDir = Direction.random();
+        enemySteps--;
+    }
+
     public void update()
     {
+        updateEnemy();
         player.walk(walkDir);
         GameEngine.setCenterCoord(player.x, player.y);
     }

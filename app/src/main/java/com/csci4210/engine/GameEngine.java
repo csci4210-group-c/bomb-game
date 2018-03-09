@@ -154,10 +154,8 @@ public class GameEngine
                 if (pushedButton != null && pushedButton.getRect().contains(x, y))
                     currState.onButton(pushedButton.id);
                 else
-                {
-                    pushedButton = null;
                     currState.onTouchUp(x, y);
-                }
+                pushedButton = null;
             }
 
             return true;
@@ -195,25 +193,22 @@ public class GameEngine
         tileSet = _tileSet;
     }
 
-    /*
-    public static void initTileMap(int width, int height)
-    {
-        tileMap = new byte[width][height];
-    }
-    */
     public static void setTileMap(byte[][] map)
     {
         tileMap = map;
     }
 
-    public static byte getTile(int x, int y)
+    // gets the tile ID at the specified coordinate
+    public static int getTileAtCoord(int x, int y)
     {
-        x /= GameEngine.TILE_WIDTH;
-        y /= GameEngine.TILE_HEIGHT;
-        if (y < tileMap.length && x < tileMap[0].length)
-        return tileMap[y][x];
+        if (y >= 0 && y < GameEngine.TILE_HEIGHT * tileMap.length
+         && x >= 0 && x < GameEngine.TILE_WIDTH * tileMap[0].length)
+            return tileMap[y / GameEngine.TILE_HEIGHT][x / GameEngine.TILE_WIDTH];
+        else
+            return -1;  // out of bounds
     }
 
+    // sets the tile ID at the specified grid cell
     public static void setTile(int x, int y, byte tile)
     {
         tileMap[y][x] = tile;
