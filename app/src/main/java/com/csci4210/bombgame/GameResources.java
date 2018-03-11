@@ -19,6 +19,8 @@ class GameResources
     static Bitmap bomberSpriteSheetRight;
     static Bitmap titleBackground;
     static Bitmap tileSet;
+    static Bitmap battleBackground;
+    static Bitmap blastSequence;
 
     static final int bomberWalkAnimSeq[][] =
     {
@@ -61,5 +63,7 @@ class GameResources
         bomberSpriteSheetLeft  = BitmapFactory.decodeResource(rsrc, R.drawable.bomber_left,  opts);
         bomberSpriteSheetRight = BitmapFactory.decodeResource(rsrc, R.drawable.bomber_right, opts);
         tileSet                = BitmapFactory.decodeResource(rsrc, R.drawable.alltiles, opts);
+        battleBackground       = BitmapFactory.decodeResource(rsrc, R.drawable.outfloor, opts);
+        blastSequence          = BitmapFactory.decodeResource(rsrc, R.drawable.blastsprite, opts);
     }
 }

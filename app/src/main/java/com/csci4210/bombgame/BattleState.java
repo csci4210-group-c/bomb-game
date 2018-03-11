@@ -126,7 +126,7 @@ public class BattleState extends State
 
     public void enter()
     {
-        
+        GameEngine.setBackdrop(GameResources.battleBackground);
         GameEngine.createButton(GameEngine.screenWidth - 100, GameEngine.screenHeight - 100,
                 200, 200, "BOMB!", BUTTON_BOMB);
         GameEngine.setTileSet(GameResources.tileSet);
@@ -186,5 +186,10 @@ public class BattleState extends State
         updateEnemy();
         player.walk(walkDir);
         GameEngine.setCenterCoord(player.x, player.y);
+    }
+
+    public void exit(){
+        GameEngine.setBackdrop(null);
+        GameEngine.destroyAllButtons();
     }
 }
