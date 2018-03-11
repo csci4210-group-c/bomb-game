@@ -126,6 +126,7 @@ public class BattleState extends State
 
     public void enter()
     {
+        
         GameEngine.createButton(GameEngine.screenWidth - 100, GameEngine.screenHeight - 100,
                 200, 200, "BOMB!", BUTTON_BOMB);
         GameEngine.setTileSet(GameResources.tileSet);
