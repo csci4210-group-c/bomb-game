@@ -98,7 +98,7 @@ public class GameEngine
             // draw sprites
             for (Sprite sprite : GameEngine.sprites)
             {
-                if (sprite.active)
+                if (sprite != null)
                 {
                     destRect = sprite.getDestRect();
                     destRect.left = (destRect.left + xoffset) * displayScale;
@@ -169,10 +169,6 @@ public class GameEngine
 
     public static void init(Activity activity)
     {
-        // initialize sprites
-        for (int i = 0; i < sprites.length; i++)
-            sprites[i] = new Sprite();
-
         // initialize Android view
         gameView = new GameView(activity);
         //getting view's default dimensions on runtime
@@ -242,7 +238,7 @@ public class GameEngine
                 currState.update();
                 for (Sprite sprite : GameEngine.sprites)
                 {
-                    if (sprite.active)
+                    if (sprite != null)
                         sprite.updateAnim();
                 }
                 GameEngine.gameView.postInvalidate();
@@ -263,13 +259,12 @@ public class GameEngine
 
     public static Sprite createSprite(Bitmap spriteSheet, int animSeq[][], int x, int y, int width, int height)
     {
-        for (Sprite sprite : sprites)
+        for (int i = 0; i < sprites.length; i++)
         {
-            if (!sprite.active)
+            if (sprites[i] == null)
             {
-                sprite.setParams(spriteSheet, animSeq, x, y, width, height);
-                sprite.active = true;
-                return sprite;
+                sprites[i] = new Sprite(spriteSheet, animSeq, x, y, width, height);
+                return sprites[i];
             }
         }
         return null;
@@ -293,9 +288,15 @@ public class GameEngine
             buttons[i] = null;
     }
 
-    public static void destroySprite(Sprite toDestroy)
+    public static void destroySprite(Sprite sprite)
     {
-        toDestroy.active = false;
+        for (int i = 0; i < sprites.length; i++)
+        {
+            if (sprites[i] == sprite) {
+                sprites[i] = null;
+                return;
+            }
+        }
     }
 
     public static void setCenterCoord(int x, int y)

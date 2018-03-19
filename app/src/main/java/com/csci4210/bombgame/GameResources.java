@@ -32,9 +32,29 @@ class GameResources
     };
 
     static final int bomberStillAnimSeq[][] =
-            {
-                    {ANIMCMD_FRAME, 0, 0},
-            };
+    {
+        {ANIMCMD_FRAME, 0, 0},
+        {ANIMCMD_END},
+    };
+
+    static final int bombFlashAnimSeq[][] =
+    {
+        {ANIMCMD_FRAME, 0, 30},
+        {ANIMCMD_FRAME, 1, 30},
+        {ANIMCMD_GOTO, 0},
+    };
+
+    static final int bombBlastAnimSeq[][] =
+    {
+        // explode
+        {ANIMCMD_FRAME, 1, 30},
+        {ANIMCMD_FRAME, 2, 10},
+        {ANIMCMD_FRAME, 3, 10},
+        {ANIMCMD_FRAME, 4, 10},
+        {ANIMCMD_FRAME, 5, 10},
+        {ANIMCMD_FRAME, 6, 10},
+        {ANIMCMD_END, 0},
+    };
 
     static final byte TILE_GRASS = 0;
     static final byte TILE_BRICK = 1;

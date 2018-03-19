@@ -9,8 +9,6 @@ import android.graphics.Rect;
 
 public class Sprite
 {
-    public boolean active = false;
-
     public int x, y;
     public int width, height;
 
@@ -18,6 +16,7 @@ public class Sprite
     public int animSequence[][];
     public int animCmdIndex;
     public int animFrameNum;
+    public boolean animEnded;
     private long animTimer;
 
     // Anim Cmd IDs
@@ -25,37 +24,39 @@ public class Sprite
     public static final int ANIMCMD_GOTO  = 1;  // ANIMCMD_GOTO, cmdIndex
     public static final int ANIMCMD_END   = 2;  // ANIMCMD_END
 
-    Sprite()
-    {
-    }
-
-    void setParams(Bitmap spriteSheet, int animSequence[][], int x, int y, int width, int height)
+    Sprite(Bitmap spriteSheet, int animSequence[][], int x, int y, int width, int height)
     {
         this.spriteSheet = spriteSheet;
-        this.animSequence = animSequence;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
 
-        // Set up initial anim sequence
+        setAnimSequence(animSequence);
+    }
 
-        int index = 0;
-        int cmd = animSequence[index][0];
+    public void setAnimSequence(int animSequence[][])
+    {
+        this.animSequence = animSequence;
+    }
+
+    public void startAnimSequence(int animSequence[][])
+    {
+        animCmdIndex = 0;
+
+        int cmd = animSequence[animCmdIndex][0];
+
+        this.animEnded = false;
+        this.animSequence = animSequence;
 
         while (cmd == ANIMCMD_GOTO)
         {
-            index = animSequence[index][1];
-            cmd = animSequence[index][0];
+            animCmdIndex = animSequence[animCmdIndex][1];
+            cmd = animSequence[animCmdIndex][0];
         }
 
         if (cmd == ANIMCMD_FRAME)
-        {
-            animFrameNum = animSequence[index][1];  // frame number
-            animTimer    = animSequence[index][2];  // duration
-        }
-
-        animCmdIndex = index;
+            initFrame(animSequence[animCmdIndex][1], animSequence[animCmdIndex][2]);
     }
 
     private void initFrame(int frameNum, int duration)
@@ -72,8 +73,6 @@ public class Sprite
             switch (animSequence[animCmdIndex][0])
             {
                 case ANIMCMD_FRAME:
-                    if (animSequence[animCmdIndex][2] == 0)
-                        return;
                     if (animTimer > 0)
                     {
                         animTimer--;
@@ -95,6 +94,7 @@ public class Sprite
                         initFrame(animSequence[animCmdIndex][1], animSequence[animCmdIndex][2]);
                     break;
                 case ANIMCMD_END:
+                    animEnded = true;
                     return;  // do nothing
             }
         }

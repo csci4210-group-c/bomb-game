@@ -15,9 +15,14 @@ public class MainActivity extends Activity
     static State testState = new TestState();
     static State battleState = new BattleState();
 
+    private static boolean initialized = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        if (initialized)
+            return;
+
         super.onCreate(savedInstanceState);
         Log.d("test", "Hello World");
 
@@ -28,5 +33,7 @@ public class MainActivity extends Activity
             GameEngine.setState(title);
             GameEngine.mainLoop();
         }
+
+        initialized = true;
     }
 }
