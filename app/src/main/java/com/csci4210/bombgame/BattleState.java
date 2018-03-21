@@ -39,8 +39,8 @@ class Bomb
 
 public class BattleState extends State
 {
-    private Bomber player;
-    private Bomber enemy;
+    public Bomber player;
+    public Bomber enemy;
 
     private PlayerController playerController;
     private EnemyController enemyController;
@@ -48,7 +48,7 @@ public class BattleState extends State
     final int BUTTON_BOMB = 0;
 
     private final int MAX_BOMBS = 10;
-    private Bomb bombs[] = new Bomb[MAX_BOMBS];
+    public Bomb bombs[] = new Bomb[MAX_BOMBS];
 
     private void addBomb(int x, int y)
     {
@@ -137,4 +137,5 @@ public class BattleState extends State
     {
         playerController.onTouchUp(x, y);
     }
+
 }
