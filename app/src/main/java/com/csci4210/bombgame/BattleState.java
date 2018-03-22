@@ -35,6 +35,10 @@ class Bomb
     {
         return sprite.animEnded;
     }
+
+    public Sprite getSprite(){
+        return this.sprite;
+    }
 }
 
 public class BattleState extends State
@@ -133,9 +137,7 @@ public class BattleState extends State
         playerController.onTouchDown(x, y);
     }
 
-    public void onTouchUp(int x, int y)
-    {
+    public void onTouchUp(int x, int y) {
         playerController.onTouchUp(x, y);
     }
-
 }
