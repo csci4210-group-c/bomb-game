@@ -6,34 +6,32 @@ package com.csci4210.bombgame;
 public class EnemyController
 {
     private Bomber bomber;
+    private BattleState battleState;
 
-    private static final int maxDepth = 4;
+    private static final int maxDepth = 2;
     private int stepsRemaining;
 
     private static Direction[] dirs = {Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT};
     private static Direction bestDirection = null;
 
-    private Bomber player;
-    Bomb[] bombs;
 
-    EnemyController(Bomber bomber)
+    EnemyController(Bomber bomber, BattleState battleState)
     {
         this.bomber = bomber;
+        this.battleState = battleState;
     }
 
     public void update()
     {
-        if (stepsRemaining == 0)
+        if (stepsRemaining == 0 || !bomber.walk(bestDirection))
         {
             bestDirection = chooseDirection(this.bomber);
             stepsRemaining = (int)(Math.random() * 100);
         }
-        if (!bomber.walk(bestDirection))
-            bestDirection = Direction.random();
         stepsRemaining--;
     }
 
-    private static Direction chooseDirection(Bomber enemy){
+    private Direction chooseDirection(Bomber enemy){
 
         int max = 0;
 
@@ -41,9 +39,10 @@ public class EnemyController
         return bestDirection;
     }
 
-    private static double alphabeta(Bomber enemy, int depth, double a, double b, boolean enemyTurn) {
+    private double alphabeta(Bomber enemy, int depth, double a, double b, boolean enemyTurn) {
         if(depth == 0) {      //max depth is explored
-            return heuristic(enemyX, enemyY);
+
+            return heuristic(enemy.x, enemy.y);
         }
 
         if(enemyTurn) {                     //enemy's turn(maximizer)
@@ -83,9 +82,11 @@ public class EnemyController
     //evaluates game state with a real number
     private double heuristic(int enemyX, int enemyY){
         double stateScore = 0;
+        Bomber player = battleState.player;
 
-        for(int i=0; i<bombs; i++) {
-            Bomb currentBomb = bombs[i];
+        for(Bomb bomb : battleState.bombs) {
+            int bombX = bomb.getSprite().x;
+            int bombY = bomb.getSprite().y;
 
             if (bombX == enemyX || bombY == enemyY) {
                 stateScore = -0.5;
@@ -98,7 +99,7 @@ public class EnemyController
             stateScore += distanceFromBomb*0.12;
         }
 
-        double distanceFromPlayer = Math.pow(Math.pow(Math.abs(playerX-enemyX), 2) + Math.pow(Math.abs(playerY-enemyY), 2), 0.5);
+        double distanceFromPlayer = Math.pow(Math.pow(Math.abs(player.x-enemyX), 2) + Math.pow(Math.abs(player.y-enemyY), 2), 0.5);
         stateScore = distanceFromPlayer*0.15;
 
 

@@ -86,7 +86,7 @@ public class BattleState extends State
         enemy = new Bomber(120, 100);
 
         playerController = new PlayerController(player);
-        enemyController = new EnemyController(enemy);
+        enemyController = new EnemyController(enemy, this);
     }
 
     public void update()
