@@ -1,5 +1,7 @@
 package com.csci4210.bombgame;
 
+import android.util.Log;
+
 import com.csci4210.engine.GameEngine;
 import com.csci4210.engine.Sprite;
 import com.csci4210.engine.State;
@@ -23,8 +25,10 @@ class Bomb
         timeRemaining--;
 
         // do explosion anim when time reaches zero
-        if (timeRemaining == 0)
+        if (timeRemaining == 0) {
             sprite.startAnimSequence(GameResources.bombBlastAnimSeq);
+            GameEngine.playSound(GameResources.detonateBomb);
+        }
 
         // destroy sprite once explosion has finished
         if (explosionDone())
@@ -127,6 +131,7 @@ public class BattleState extends State
                 int bombX = player.x / GameEngine.TILE_WIDTH * GameEngine.TILE_WIDTH + GameEngine.TILE_WIDTH / 2;
                 int bombY = player.y / GameEngine.TILE_HEIGHT * GameEngine.TILE_HEIGHT + GameEngine.TILE_HEIGHT / 2;
                 addBomb(bombX, bombY);
+                GameEngine.playSound(GameResources.placeBomb);
             }
             break;
         }

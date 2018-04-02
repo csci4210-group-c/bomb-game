@@ -32,7 +32,7 @@ public class EnemyController
             int by = bomber.y;
 
             //trying to go away from the player
-            if (px-bx > py-by)
+            /*if (px-bx > py-by)
             {
                 if (px-bx > by-py)
                     bestDirection = Direction.LEFT;
@@ -45,7 +45,7 @@ public class EnemyController
                     bestDirection = Direction.RIGHT;
                 else
                     bestDirection = Direction.UP;
-            }
+            }*/
 
             //to go for max score state
             /*double maxScore = Double.NEGATIVE_INFINITY;
@@ -61,6 +61,8 @@ public class EnemyController
 
 
             //bestDirection = dirs[((int)(Math.random()*4))%3];
+
+            bestDirection = chooseDirection(bomber);
 
             stepsRemaining = (int)(Math.random() * 100);
         }
@@ -120,18 +122,20 @@ public class EnemyController
         Bomber player = battleState.player;
 
         for(Bomb bomb : battleState.bombs) {
-            int bombX = bomb.getSprite().x;
-            int bombY = bomb.getSprite().y;
+            if (bomb != null) {
+                int bombX = bomb.getSprite().x;
+                int bombY = bomb.getSprite().y;
 
-            if (bombX == enemyX || bombY == enemyY) {
-                stateScore = -0.5;
-                if ((bombX == enemyX && Math.abs(bombY - enemyY) <= 75) || (bombY == enemyY && Math.abs(bombX - enemyX) <= 75)) {
-                    stateScore -= 1.5;
+                if (bombX == enemyX || bombY == enemyY) {
+                    stateScore = -0.5;
+                    if ((bombX == enemyX && Math.abs(bombY - enemyY) <= 75) || (bombY == enemyY && Math.abs(bombX - enemyX) <= 75)) {
+                        stateScore -= 1.5;
+                    }
                 }
-            }
 
-            double distanceFromBomb = Math.pow(Math.pow(Math.abs(bombX-enemyX), 2) + Math.pow(Math.abs(bombY-enemyY), 2), 0.5);
-            stateScore += distanceFromBomb*0.12;
+                double distanceFromBomb = Math.pow(Math.pow(Math.abs(bombX - enemyX), 2) + Math.pow(Math.abs(bombY - enemyY), 2), 0.5);
+                stateScore += distanceFromBomb * 0.12;
+            }
         }
 
         double distanceFromPlayer = Math.pow(Math.pow(Math.abs(player.x-enemyX), 2) + Math.pow(Math.abs(player.y-enemyY), 2), 0.5);

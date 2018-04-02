@@ -6,6 +6,7 @@ package com.csci4210.engine;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,11 +14,17 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Shader;
+import android.media.MediaPlayer;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.csci4210.bombgame.MainActivity;
+
+import java.io.FileDescriptor;
+import java.io.IOException;
 
 public class GameEngine
 {
@@ -40,7 +47,9 @@ public class GameEngine
     private static Bitmap backdrop;
     private static GameView gameView;
     private static State currState;
+    private static State nextState;
     private static Button pushedButton;
+    private static MediaPlayer mediaPlayers[] = new MediaPlayer[4];
 
     static class GameView extends View
     {
@@ -177,10 +186,11 @@ public class GameEngine
         screenWidth = displayMetrics.widthPixels;
         screenHeight = displayMetrics.heightPixels;
 
-        int screenDimMax = Math.max(screenWidth, screenHeight);
-        if (screenDimMax > 1000)
-            displayScale = 2;
+        for (int i = 0; i < mediaPlayers.length; i++)
+            mediaPlayers[i] = new MediaPlayer();
 
+        int screenDimMax = Math.max(screenWidth, screenHeight);
+        displayScale = Math.max(screenDimMax / 500, 1);
         activity.setContentView(gameView);
     }
 
@@ -212,10 +222,7 @@ public class GameEngine
 
     public static void setState(State state)
     {
-        if (currState != null)
-            currState.exit();
-        currState = state;
-        currState.enter();
+        nextState = state;
     }
 
     static class MainThread extends Thread
@@ -234,6 +241,15 @@ public class GameEngine
                 if (1000 / TICKS_PER_SECOND > dt)
                     SystemClock.sleep(1000 / TICKS_PER_SECOND - dt);
                 before = SystemClock.elapsedRealtime();
+
+                // handle state change
+                if (nextState != currState)
+                {
+                    if (currState != null)
+                        currState.exit();
+                    currState = nextState;
+                    currState.enter();
+                }
 
                 currState.update();
                 for (Sprite sprite : GameEngine.sprites)
@@ -303,5 +319,30 @@ public class GameEngine
     {
         xoffset = screenWidth / displayScale / 2 - x;
         yoffset = screenHeight / displayScale / 2 - y;
+    }
+
+    public static void playSound(FileDescriptor sound)
+    {
+        /*
+        for (MediaPlayer mplayer : mediaPlayers)
+        {
+            if (!mplayer.isPlaying())
+            {
+                //mplayer.stop();
+                //mplayer.release();
+                mplayer.reset();
+                try {
+                    mplayer.setDataSource(sound);
+                    mplayer.prepare();
+                    mplayer.start();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+                return;
+            }
+        }
+        */
     }
 }

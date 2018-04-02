@@ -5,10 +5,13 @@ package com.csci4210.bombgame;
  */
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
+
+import java.io.FileDescriptor;
 
 import static com.csci4210.engine.Sprite.*;
 
@@ -23,9 +26,9 @@ class GameResources
     static Bitmap battleBackground;
     static Bitmap blastSequence;
 
-    static MediaPlayer placeBomb;
-    static MediaPlayer detonateBomb;
-    static MediaPlayer timeWarning;
+    static FileDescriptor placeBomb;
+    static FileDescriptor detonateBomb;
+    static FileDescriptor timeWarning;
 
     static final int bomberWalkAnimSeq[][] =
     {
@@ -91,10 +94,8 @@ class GameResources
         battleBackground       = BitmapFactory.decodeResource(rsrc, R.drawable.outfloor, opts);
         blastSequence          = BitmapFactory.decodeResource(rsrc, R.drawable.blastsprite, opts);
 
-        placeBomb = MediaPlayer.create(context, R.raw.DropBomb);
-        detonateBomb = MediaPlayer.create(context, R.raw.explosion);
-        timeWarning = MediaPlayer.create(context, R.raw.timer);
-
-
+        placeBomb = rsrc.openRawResourceFd(R.raw.drop_bomb).getFileDescriptor();
+        detonateBomb = rsrc.openRawResourceFd(R.raw.explosion).getFileDescriptor();
+        timeWarning = rsrc.openRawResourceFd(R.raw.timer).getFileDescriptor();
     }
 }
