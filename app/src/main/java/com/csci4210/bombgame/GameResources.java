@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 
 import static com.csci4210.engine.Sprite.*;
 
@@ -21,6 +22,10 @@ class GameResources
     static Bitmap tileSet;
     static Bitmap battleBackground;
     static Bitmap blastSequence;
+
+    static MediaPlayer placeBomb;
+    static MediaPlayer detonateBomb;
+    static MediaPlayer timeWarning;
 
     static final int bomberWalkAnimSeq[][] =
     {
@@ -85,5 +90,11 @@ class GameResources
         tileSet                = BitmapFactory.decodeResource(rsrc, R.drawable.alltiles, opts);
         battleBackground       = BitmapFactory.decodeResource(rsrc, R.drawable.outfloor, opts);
         blastSequence          = BitmapFactory.decodeResource(rsrc, R.drawable.blastsprite, opts);
+
+        placeBomb = MediaPlayer.create(context, R.raw.DropBomb);
+        detonateBomb = MediaPlayer.create(context, R.raw.explosion);
+        timeWarning = MediaPlayer.create(context, R.raw.timer);
+
+
     }
 }

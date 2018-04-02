@@ -25,12 +25,49 @@ public class EnemyController
     {
         if (stepsRemaining == 0 || !bomber.walk(bestDirection))
         {
-            bestDirection = chooseDirection(this.bomber);
+            Bomber player = battleState.player;
+            int px = player.x;
+            int py = player.y;
+            int bx = bomber.x;
+            int by = bomber.y;
+
+            //trying to go away from the player
+            if (px-bx > py-by)
+            {
+                if (px-bx > by-py)
+                    bestDirection = Direction.LEFT;
+                else
+                    bestDirection = Direction.DOWN;
+            }
+            else
+            {
+                if (bx-px > py-by)
+                    bestDirection = Direction.RIGHT;
+                else
+                    bestDirection = Direction.UP;
+            }
+
+            //to go for max score state
+            /*double maxScore = Double.NEGATIVE_INFINITY;
+            for(int i=0; i<dirs.length; i++){
+                Bomber newBomber = bomber;
+                newBomber.walk(dirs[i]);
+                double newScore = heuristic(newBomber.x, newBomber.y);
+                if(newScore > maxScore){
+                    maxScore = newScore;
+                    bestDirection = dirs[i];
+                }
+            }*/
+
+
+            //bestDirection = dirs[((int)(Math.random()*4))%3];
+
             stepsRemaining = (int)(Math.random() * 100);
         }
         stepsRemaining--;
     }
 
+    //looks few steps in the future to choose max score state
     private Direction chooseDirection(Bomber enemy){
 
         int max = 0;
@@ -50,7 +87,6 @@ public class EnemyController
             for(int i=0; i<dirs.length; i++) {    //running through possible directions
                 Direction maxDirection = dirs[i];
 
-
                 val = Math.max(val, alphabeta(enemy,depth-1, a, b, false));
                 if(depth == maxDepth && Double.compare(val, a)>0) { //if we have a better value
                     bestDirection = maxDirection;
@@ -65,7 +101,6 @@ public class EnemyController
             double val = Double.POSITIVE_INFINITY;
             for(int i=0; i<dirs.length; i++) {    //running through possible directions
                 Direction minDirection = dirs[i];
-
 
                 val = Math.min(val, alphabeta(enemy,depth-1, a, b, true));
                 if(depth == maxDepth && Double.compare(val, b)<0) {
@@ -101,7 +136,6 @@ public class EnemyController
 
         double distanceFromPlayer = Math.pow(Math.pow(Math.abs(player.x-enemyX), 2) + Math.pow(Math.abs(player.y-enemyY), 2), 0.5);
         stateScore = distanceFromPlayer*0.15;
-
 
         return stateScore;
     }
