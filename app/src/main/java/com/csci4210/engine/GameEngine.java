@@ -50,6 +50,7 @@ public class GameEngine
     private static State nextState;
     private static Button pushedButton;
     private static MediaPlayer mediaPlayers[] = new MediaPlayer[4];
+    private static Context context;
 
     static class GameView extends View
     {
@@ -185,13 +186,10 @@ public class GameEngine
         ((Activity)gameView.getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         screenWidth = displayMetrics.widthPixels;
         screenHeight = displayMetrics.heightPixels;
-
-        for (int i = 0; i < mediaPlayers.length; i++)
-            mediaPlayers[i] = new MediaPlayer();
-
         int screenDimMax = Math.max(screenWidth, screenHeight);
         displayScale = Math.max(screenDimMax / 500, 1);
         activity.setContentView(gameView);
+        context = activity;
     }
 
     public static void setTileSet(Bitmap _tileSet)
@@ -321,25 +319,46 @@ public class GameEngine
         yoffset = screenHeight / displayScale / 2 - y;
     }
 
-    public static void playSound(FileDescriptor sound)
+    public static void playSound(int sound)
     {
-        /*
-        for (MediaPlayer mplayer : mediaPlayers)
+        // release finished players
+        for (int i = 0; i < mediaPlayers.length; i++)
         {
-            if (!mplayer.isPlaying())
+            if (mediaPlayers[i] != null && !mediaPlayers[i].isPlaying()) {
+                mediaPlayers[i].release();
+                mediaPlayers[i] = null;
+            }
+        }
+
+        // create new media player
+        for (int i = 0; i < mediaPlayers.length; i++)
+        {
+            if (mediaPlayers[i] == null)
             {
-                //mplayer.stop();
-                //mplayer.release();
-                mplayer.reset();
+                mediaPlayers[i] = MediaPlayer.create(context, sound);
+                mediaPlayers[i].start();
+                break;
+            }
+        }
+        /*
+        // create new media player
+        for (int i = 0; i < mediaPlayers.length; i++)
+        {
+            if (mediaPlayers[i] == null)
+            {
+                //Log.d("soundtest", "using media player " + i);
+                mediaPlayers[i] = new MediaPlayer();
                 try {
-                    mplayer.setDataSource(sound);
-                    mplayer.prepare();
-                    mplayer.start();
+                    //mediaPlayers[i].reset();
+                    mediaPlayers[i].setDataSource(sound);
+                    mediaPlayers[i].prepare();
                 }
                 catch (IOException e)
                 {
                     e.printStackTrace();
+                    return;
                 }
+                mediaPlayers[i].start();
                 return;
             }
         }

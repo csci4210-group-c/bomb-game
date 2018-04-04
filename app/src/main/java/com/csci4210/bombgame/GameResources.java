@@ -26,9 +26,9 @@ class GameResources
     static Bitmap battleBackground;
     static Bitmap blastSequence;
 
-    static FileDescriptor placeBomb;
-    static FileDescriptor detonateBomb;
-    static FileDescriptor timeWarning;
+    static int placeBomb;
+    static int detonateBomb;
+    static int timeWarning;
 
     static final int bomberWalkAnimSeq[][] =
     {
@@ -94,8 +94,8 @@ class GameResources
         battleBackground       = BitmapFactory.decodeResource(rsrc, R.drawable.outfloor, opts);
         blastSequence          = BitmapFactory.decodeResource(rsrc, R.drawable.blastsprite, opts);
 
-        placeBomb = rsrc.openRawResourceFd(R.raw.drop_bomb).getFileDescriptor();
-        detonateBomb = rsrc.openRawResourceFd(R.raw.explosion).getFileDescriptor();
-        timeWarning = rsrc.openRawResourceFd(R.raw.timer).getFileDescriptor();
+        placeBomb = R.raw.drop_bomb;
+        detonateBomb = R.raw.explosion;
+        timeWarning = R.raw.timer;
     }
 }
