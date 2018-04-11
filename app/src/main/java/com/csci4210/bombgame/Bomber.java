@@ -43,6 +43,37 @@ class Bomber
         faceDirection(Direction.DOWN);
     }
 
+    public boolean canWalkInDirection(Direction direction)
+    {
+        int newx = x;
+        int newy = y;
+
+        switch (direction)
+        {
+            case UP:
+                newy--;
+                break;
+            case DOWN:
+                newy++;
+                break;
+            case LEFT:
+                newx--;
+                break;
+            case RIGHT:
+                newx++;
+                break;
+        }
+
+                // top left
+        return (GameEngine.getTileAtCoord(newx - WIDTH / 2, newy - HEIGHT / 2) == GameResources.TILE_GRASS
+                // top right
+                && GameEngine.getTileAtCoord(newx + WIDTH / 2, newy - HEIGHT / 2) == GameResources.TILE_GRASS
+                // bottom left
+                && GameEngine.getTileAtCoord(newx - WIDTH / 2, newy + HEIGHT / 2) == GameResources.TILE_GRASS
+                // bottom right
+                && GameEngine.getTileAtCoord(newx + WIDTH / 2, newy + HEIGHT / 2) == GameResources.TILE_GRASS);
+    }
+
     public boolean walk(Direction direction)
     {
         int newx = x;
