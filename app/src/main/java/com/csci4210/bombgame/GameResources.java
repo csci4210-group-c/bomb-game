@@ -64,9 +64,10 @@ class GameResources
         {ANIMCMD_END, 0},
     };
 
-    static final byte TILE_GRASS = 0;
-    static final byte TILE_BRICK = 1;
-    static final byte TILE_STONE = 2;
+    static final byte TILE_GRASS = 1;
+    static final byte TILE_BRICK = 2;
+    static final byte TILE_STONE = 3;
+    static final byte TILE_FIRE = 4;
 
     static final byte level1TileMap[][] = {
             {TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_BRICK, TILE_GRASS, TILE_BRICK, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_BRICK, TILE_GRASS},

@@ -76,13 +76,13 @@ class Bomber
         // Do collision check with grid
 
         // top left
-        if (GameEngine.getTileAtCoord(newx - WIDTH / 2, newy - HEIGHT / 2) == GameResources.TILE_GRASS
+        if (GameEngine.getTileAtCoord(0,newx - WIDTH / 2, newy - HEIGHT / 2) == GameResources.TILE_GRASS
                 // top right
-                && GameEngine.getTileAtCoord(newx + WIDTH / 2, newy - HEIGHT / 2) == GameResources.TILE_GRASS
+                && GameEngine.getTileAtCoord(0,newx + WIDTH / 2, newy - HEIGHT / 2) == GameResources.TILE_GRASS
                 // bottom left
-                && GameEngine.getTileAtCoord(newx - WIDTH / 2, newy + HEIGHT / 2) == GameResources.TILE_GRASS
+                && GameEngine.getTileAtCoord(0,newx - WIDTH / 2, newy + HEIGHT / 2) == GameResources.TILE_GRASS
                 // bottom right
-                && GameEngine.getTileAtCoord(newx + WIDTH / 2, newy + HEIGHT / 2) == GameResources.TILE_GRASS)
+                && GameEngine.getTileAtCoord(0,newx + WIDTH / 2, newy + HEIGHT / 2) == GameResources.TILE_GRASS)
         {
             // was able to move
             x = newx;

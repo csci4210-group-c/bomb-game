@@ -1,6 +1,7 @@
 package com.csci4210.bombgame;
 
 import android.util.Log;
+import android.widget.Switch;
 
 import com.csci4210.engine.GameEngine;
 import com.csci4210.engine.Sprite;
@@ -12,12 +13,68 @@ class Bomb
 {
     private Sprite sprite;
     private int timeRemaining;
+    private int radius = 3;
 
     public Bomb(int x, int y)
     {
         sprite = GameEngine.createSprite(GameResources.blastSequence, GameResources.bombFlashAnimSeq,
                 x, y, 32, 32);
         timeRemaining = 5 * 60;
+    }
+
+    private boolean blastTile(int x, int y)
+    {
+        int tile = GameEngine.getTileAtCoord(0, x, y);
+
+        if (tile == GameResources.TILE_STONE)
+            return false;
+        if (tile == GameResources.TILE_BRICK)
+            GameEngine.setTile(0, x, y, GameResources.TILE_GRASS);
+        GameEngine.setTile(1, x, y, GameResources.TILE_FIRE);
+        return true;
+    }
+
+    private void addBlast()
+    {
+        // get tile bomb is on
+        int centerX = sprite.x / GameEngine.TILE_WIDTH;
+        int centerY = sprite.y / GameEngine.TILE_HEIGHT;
+
+        // left
+        for (int i = 1; i < radius; i++)
+            if (blastTile(centerX - i, centerY))
+                break;
+
+        // right
+        for (int i = 1; i < radius; i++)
+            if (blastTile(centerX + i, centerY))
+                break;
+
+        // top
+        for (int i = 1; i < radius; i++)
+            if (blastTile(centerX, centerY - i))
+                break;
+
+        // bottom
+        for (int i = 1; i < radius; i++)
+            if (blastTile(centerX, centerY + i))
+                break;
+
+    }
+
+    private void removeBlast()
+    {
+        // get tile bomb is on
+        int centerX = sprite.x / GameEngine.TILE_WIDTH;
+        int centerY = sprite.y / GameEngine.TILE_HEIGHT;
+
+        for (int i = 1; i < radius; i++)
+        {
+            GameEngine.setTile(1, centerX - i, centerY, GameResources.TILE_STONE);
+            GameEngine.setTile(1, centerX + i, centerY, GameResources.TILE_STONE);
+            GameEngine.setTile(1, centerX, centerY - i, GameResources.TILE_STONE);
+            GameEngine.setTile(1, centerX, centerY + i, GameResources.TILE_STONE);
+        }
     }
 
     public void update()
@@ -28,6 +85,7 @@ class Bomb
         if (timeRemaining == 0) {
             sprite.startAnimSequence(GameResources.bombBlastAnimSeq);
             GameEngine.playSound(GameResources.detonateBomb);
+            addBlast();
         }
 
         // destroy sprite once explosion has finished
@@ -108,6 +166,7 @@ public class BattleState extends State
             {
                 bomb.update();
                 if (bomb.explosionDone())
+                    
                     removeBomb(bomb);
             }
         }
@@ -137,6 +196,33 @@ public class BattleState extends State
         }
     }
 
+    public  void explode(Bomb bomb){
+        int tileX = bomb.getSprite().x/GameEngine.TILE_WIDTH;
+        int tileY = bomb.getSprite().y/GameEngine.TILE_HEIGHT;
+        for(int i=-1; i<2;i++){
+            int j=0;
+            switch (j){
+                case -1:{
+                    if(GameResources.level1TileMap[tileX+i][tileY+j]== GameResources.TILE_BRICK) {
+                        GameResources.level1TileMap[tileX + i][tileY + j] = GameResources.TILE_GRASS;
+                    }
+                }
+                case 0:{
+                    if(GameResources.level1TileMap[tileX+i][tileY+j]== GameResources.TILE_BRICK) {
+                        GameResources.level1TileMap[tileX + i][tileY + j] = GameResources.TILE_GRASS;
+                    }
+                }
+                case 1:{
+                    if(GameResources.level1TileMap[tileX+i][tileY+j]== GameResources.TILE_BRICK) {
+                        GameResources.level1TileMap[tileX + i][tileY + j] = GameResources.TILE_GRASS;
+                    }
+
+                }
+
+
+            }
+        }
+    }
     public void onTouchDown(int x, int y)
     {
         playerController.onTouchDown(x, y);

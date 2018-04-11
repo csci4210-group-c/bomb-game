@@ -41,7 +41,7 @@ public class GameEngine
     public static int screenHeight;
 
     private static Bitmap tileSet;
-    private static byte tileMap[][];
+    private static byte tileMaps[][][] = new byte[2][][];
     private static Sprite sprites[] = new Sprite[MAX_SPRITES];
     private static Button buttons[] = new Button[MAX_BUTTONS];
     private static Bitmap backdrop;
@@ -81,30 +81,32 @@ public class GameEngine
                 canvas.drawBitmap(backdrop, srcRect, destRect, paint);
             }
 
-            // draw tilemap
-            if (tileMap != null && tileSet != null)
-            {
-                int tileWidth = TILE_WIDTH* displayScale;
-                int tileHeight = TILE_HEIGHT* displayScale;
-                int tileX, tileY;
-                int destX, destY;
-                int srcWidth = tileSet.getWidth();
+            for (int i = 0; i < tileMaps.length; i++) {
+                // draw tilemap
+                byte tileMap[][] = tileMaps[i];
+                if (tileMaps != null && tileSet != null) {
+                    int tileWidth = TILE_WIDTH * displayScale;
+                    int tileHeight = TILE_HEIGHT * displayScale;
+                    int tileX, tileY;
+                    int destX, destY;
+                    int srcWidth = tileSet.getWidth();
 
-                for (tileY = 0; tileY < tileMap.length; tileY++)
-                {
-                    destY = yoffset * displayScale + tileY * tileHeight;
-                    for (tileX = 0; tileX < tileMap[tileY].length; tileX++)
-                    {
-                        byte tileId = tileMap[tileY][tileX];
+                    for (tileY = 0; tileY < tileMap.length; tileY++) {
+                        destY = yoffset * displayScale + tileY * tileHeight;
+                        for (tileX = 0; tileX < tileMap[tileY].length; tileX++) {
+                            byte tileId = tileMap[tileY][tileX];
 
-                        destX = xoffset * displayScale + tileX * tileWidth;
-                        destRect.set(destX, destY, destX + tileWidth, destY + tileHeight);
-                        srcRect.set(0, tileId * srcWidth, srcWidth, tileId * srcWidth + srcWidth);
-                        canvas.drawBitmap(tileSet, srcRect, destRect, paint);
+                            if (tileId != 0) {  // tile ID 0 is transparent
+                                tileId -= 1;  // get 0 based index of tile in tileset
+                                destX = xoffset * displayScale + tileX * tileWidth;
+                                destRect.set(destX, destY, destX + tileWidth, destY + tileHeight);
+                                srcRect.set(0, tileId * srcWidth, srcWidth, tileId * srcWidth + srcWidth);
+                                canvas.drawBitmap(tileSet, srcRect, destRect, paint);
+                            }
+                        }
                     }
                 }
             }
-
             // draw sprites
             for (Sprite sprite : GameEngine.sprites)
             {
@@ -199,23 +201,33 @@ public class GameEngine
 
     public static void setTileMap(byte[][] map)
     {
-        tileMap = map;
+        int columns = map[0].length;
+        int rows = map.length;
+
+        // allocate two tilemaps
+        tileMaps[0] = new byte[rows][columns];
+        tileMaps[1] = new byte[rows][columns];
+
+        // initialize bottom tilemap
+        for (int r = 0; r < rows; r++)
+            for (int c = 0; c < columns; c++)
+                tileMaps[0][r][c] = map[r][c];
     }
 
     // gets the tile ID at the specified coordinate
-    public static int getTileAtCoord(int x, int y)
+    public static int getTileAtCoord(int mapNum, int x, int y)
     {
-        if (y >= 0 && y < GameEngine.TILE_HEIGHT * tileMap.length
-         && x >= 0 && x < GameEngine.TILE_WIDTH * tileMap[0].length)
-            return tileMap[y / GameEngine.TILE_HEIGHT][x / GameEngine.TILE_WIDTH];
+        if (y >= 0 && y < GameEngine.TILE_HEIGHT * tileMaps[0].length
+         && x >= 0 && x < GameEngine.TILE_WIDTH * tileMaps[0][0].length)
+            return tileMaps[mapNum][y / GameEngine.TILE_HEIGHT][x / GameEngine.TILE_WIDTH];
         else
             return -1;  // out of bounds
     }
 
     // sets the tile ID at the specified grid cell
-    public static void setTile(int x, int y, byte tile)
+    public static void setTile(int mapNum, int x, int y, byte tile)
     {
-        tileMap[y][x] = tile;
+        tileMaps[mapNum][y][x] = tile;
     }
 
     public static void setState(State state)
