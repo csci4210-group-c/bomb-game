@@ -2,6 +2,8 @@ package com.csci4210.bombgame;
 
 // This class contains the AI logic for an enemy character
 
+import com.csci4210.engine.GameEngine;
+
 // simple dummy enemy movement
 public class EnemyController
 {
@@ -25,6 +27,49 @@ public class EnemyController
     {
         if (stepsRemaining == 0 || !bomber.walk(bestDirection))
         {
+            int maxSum = 0;
+
+            bestDirection = null;
+            for (Direction d : dirs)
+            {
+                // Do not try directions in which we can't move
+                if (!bomber.canWalkInDirection(d))
+                    continue;
+
+                int x = bomber.x;
+                int y = bomber.y;
+                final int offset = GameEngine.TILE_WIDTH * 5;
+                int sum = 0;
+
+                switch (d)
+                {
+                    case UP:    y -= offset; break;
+                    case DOWN:  y += offset; break;
+                    case LEFT:  x -= offset; break;
+                    case RIGHT: x += offset; break;
+                }
+
+                for (Bomb b : battleState.bombs)
+                {
+                    if (b != null)
+                    {
+                        sum += Math.abs(b.getSprite().x - x);
+                        sum += Math.abs(b.getSprite().y - y);
+                    }
+                }
+
+                // choose best direction based on bombs
+                if (sum > maxSum)
+                {
+                    maxSum = sum;
+                    bestDirection = d;
+                }
+
+                // if there are no bombs, choose a random direction
+                if (bestDirection == null)
+                    bestDirection = Direction.random();
+            }
+            /*
             Bomber player = battleState.player;
             int px = player.x;
             int py = player.y;
@@ -32,7 +77,7 @@ public class EnemyController
             int by = bomber.y;
 
             //trying to go away from the player
-            /*if (px-bx > py-by)
+            if (px-bx > py-by)
             {
                 if (px-bx > by-py)
                     bestDirection = Direction.LEFT;
@@ -45,7 +90,8 @@ public class EnemyController
                     bestDirection = Direction.RIGHT;
                 else
                     bestDirection = Direction.UP;
-            }*/
+            }
+            */
 
             //to go for max score state
             /*double maxScore = Double.NEGATIVE_INFINITY;
@@ -62,7 +108,7 @@ public class EnemyController
 
             //bestDirection = dirs[((int)(Math.random()*4))%3];
 
-            bestDirection = chooseDirection(bomber);
+            //bestDirection = chooseDirection(bomber);
 
             stepsRemaining = (int)(Math.random() * 100);
         }
