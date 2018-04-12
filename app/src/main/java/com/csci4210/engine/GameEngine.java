@@ -227,7 +227,21 @@ public class GameEngine
     // sets the tile ID at the specified grid cell
     public static void setTile(int mapNum, int x, int y, byte tile)
     {
-        tileMaps[mapNum][y][x] = tile;
+        byte tileMap[][] = tileMaps[mapNum];
+
+        if (y >= 0 && y < tileMap.length && x >= 0 && x < tileMap[0].length)
+            tileMap[y][x] = tile;
+    }
+
+    // gets the tile ID at the specified grid cell
+    public static byte getTile(int mapNum, int x, int y)
+    {
+        byte tileMap[][] = tileMaps[mapNum];
+
+        if (y >= 0 && y < tileMap.length && x >= 0 && x < tileMap[0].length)
+            return tileMap[y][x];
+        else
+            return -1;  // out of bounds
     }
 
     public static void setState(State state)

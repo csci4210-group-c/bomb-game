@@ -24,13 +24,24 @@ class Bomb
 
     private boolean blastTile(int x, int y)
     {
-        int tile = GameEngine.getTileAtCoord(0, x, y);
+        int tile = GameEngine.getTile(0, x, y);
 
         if (tile == GameResources.TILE_STONE)
             return false;
         if (tile == GameResources.TILE_BRICK)
             GameEngine.setTile(0, x, y, GameResources.TILE_GRASS);
         GameEngine.setTile(1, x, y, GameResources.TILE_FIRE);
+        return true;
+    }
+
+    private boolean removeBlastTile(int x, int y)
+    {
+        int tile = GameEngine.getTile(1, x, y);
+
+        if (tile == GameResources.TILE_FIRE)
+        {
+            GameEngine.setTile(1, x, y, (byte)0);
+        }
         return true;
     }
 
@@ -41,25 +52,24 @@ class Bomb
         int centerY = sprite.y / GameEngine.TILE_HEIGHT;
 
         // left
-        for (int i = 1; i < radius; i++)
-            if (blastTile(centerX - i, centerY))
+        for (int i = 1; i <= radius; i++)
+            if (!blastTile(centerX - i, centerY))
                 break;
 
         // right
-        for (int i = 1; i < radius; i++)
-            if (blastTile(centerX + i, centerY))
+        for (int i = 1; i <= radius; i++)
+            if (!blastTile(centerX + i, centerY))
                 break;
 
         // top
-        for (int i = 1; i < radius; i++)
-            if (blastTile(centerX, centerY - i))
+        for (int i = 1; i <= radius; i++)
+            if (!blastTile(centerX, centerY - i))
                 break;
 
         // bottom
-        for (int i = 1; i < radius; i++)
-            if (blastTile(centerX, centerY + i))
+        for (int i = 1; i <= radius; i++)
+            if (!blastTile(centerX, centerY + i))
                 break;
-
     }
 
     private void removeBlast()
@@ -68,13 +78,25 @@ class Bomb
         int centerX = sprite.x / GameEngine.TILE_WIDTH;
         int centerY = sprite.y / GameEngine.TILE_HEIGHT;
 
-        for (int i = 1; i < radius; i++)
-        {
-            GameEngine.setTile(1, centerX - i, centerY, GameResources.TILE_STONE);
-            GameEngine.setTile(1, centerX + i, centerY, GameResources.TILE_STONE);
-            GameEngine.setTile(1, centerX, centerY - i, GameResources.TILE_STONE);
-            GameEngine.setTile(1, centerX, centerY + i, GameResources.TILE_STONE);
-        }
+        // left
+        for (int i = 1; i <= radius; i++)
+            if (!removeBlastTile(centerX - i, centerY))
+                break;
+
+        // right
+        for (int i = 1; i <= radius; i++)
+            if (!removeBlastTile(centerX + i, centerY))
+                break;
+
+        // top
+        for (int i = 1; i <= radius; i++)
+            if (!removeBlastTile(centerX, centerY - i))
+                break;
+
+        // bottom
+        for (int i = 1; i <= radius; i++)
+            if (!removeBlastTile(centerX, centerY + i))
+                break;
     }
 
     public void update()
@@ -83,14 +105,16 @@ class Bomb
 
         // do explosion anim when time reaches zero
         if (timeRemaining == 0) {
+            addBlast();
             sprite.startAnimSequence(GameResources.bombBlastAnimSeq);
             GameEngine.playSound(GameResources.detonateBomb);
-            addBlast();
         }
 
         // destroy sprite once explosion has finished
-        if (explosionDone())
+        if (explosionDone()) {
+            removeBlast();
             GameEngine.destroySprite(sprite);
+        }
     }
 
     public boolean explosionDone()

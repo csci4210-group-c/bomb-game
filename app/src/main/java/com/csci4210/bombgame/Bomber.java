@@ -65,13 +65,13 @@ class Bomber
         }
 
                 // top left
-        return (GameEngine.getTileAtCoord(newx - WIDTH / 2, newy - HEIGHT / 2) == GameResources.TILE_GRASS
+        return (GameEngine.getTileAtCoord(0,newx - WIDTH / 2, newy - HEIGHT / 2) == GameResources.TILE_GRASS
                 // top right
-                && GameEngine.getTileAtCoord(newx + WIDTH / 2, newy - HEIGHT / 2) == GameResources.TILE_GRASS
+                && GameEngine.getTileAtCoord(0,newx + WIDTH / 2, newy - HEIGHT / 2) == GameResources.TILE_GRASS
                 // bottom left
-                && GameEngine.getTileAtCoord(newx - WIDTH / 2, newy + HEIGHT / 2) == GameResources.TILE_GRASS
+                && GameEngine.getTileAtCoord(0,newx - WIDTH / 2, newy + HEIGHT / 2) == GameResources.TILE_GRASS
                 // bottom right
-                && GameEngine.getTileAtCoord(newx + WIDTH / 2, newy + HEIGHT / 2) == GameResources.TILE_GRASS);
+                && GameEngine.getTileAtCoord(0,newx + WIDTH / 2, newy + HEIGHT / 2) == GameResources.TILE_GRASS);
     }
 
     public boolean walk(Direction direction)

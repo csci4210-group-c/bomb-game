@@ -60,7 +60,7 @@ class GameResources
         {ANIMCMD_FRAME, 3, 10},
         {ANIMCMD_FRAME, 4, 10},
         {ANIMCMD_FRAME, 5, 10},
-        {ANIMCMD_FRAME, 6, 10},
+        {ANIMCMD_FRAME, 6, 100},
         {ANIMCMD_END, 0},
     };
 
