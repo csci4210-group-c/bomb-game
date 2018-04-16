@@ -13,16 +13,12 @@ public class TitleState extends State{
     final int BUTTON_START = 0;
     final int BUTTON_QUIT = 1;
 
+    public static final TitleState instance = new TitleState();
+
     public void enter(){
         GameEngine.setBackdrop(GameResources.titleBackground);
         GameEngine.createButton(GameEngine.screenWidth/2, GameEngine.screenHeight/2, 300, 100, "PLAY", BUTTON_START);
         GameEngine.createButton(GameEngine.screenWidth/2, (GameEngine.screenHeight/2) + 200, 300, 100, "QUIT", BUTTON_START);
-    }
-
-    public void exit()
-    {
-        GameEngine.destroyAllButtons();
-        GameEngine.setBackdrop(null);
     }
 
     public void update(){
@@ -34,7 +30,7 @@ public class TitleState extends State{
         switch (buttonId)
         {
             case BUTTON_START:
-                GameEngine.setState(MainActivity.battleState);
+                GameEngine.setState(BattleState.instance);
                 break;
             case BUTTON_QUIT:
                 GameEngine.setState(null);

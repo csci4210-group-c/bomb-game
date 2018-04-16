@@ -51,6 +51,8 @@ class Bomb
         int centerX = sprite.x / GameEngine.TILE_WIDTH;
         int centerY = sprite.y / GameEngine.TILE_HEIGHT;
 
+        blastTile(centerX, centerY);
+
         // left
         for (int i = 1; i <= radius; i++)
             if (!blastTile(centerX - i, centerY))
@@ -77,6 +79,8 @@ class Bomb
         // get tile bomb is on
         int centerX = sprite.x / GameEngine.TILE_WIDTH;
         int centerY = sprite.y / GameEngine.TILE_HEIGHT;
+
+        removeBlastTile(centerX, centerY);
 
         // left
         for (int i = 1; i <= radius; i++)
@@ -129,16 +133,15 @@ class Bomb
 
 public class BattleState extends State
 {
-    public Bomber player;
-    public Bomber enemy;
+    public static final BattleState instance = new BattleState();
 
-    private PlayerController playerController;
-    private EnemyController enemyController;
+    private Bomber bombers[] = new Bomber[5];
+    private Player player;
 
     final int BUTTON_BOMB = 0;
 
     private final int MAX_BOMBS = 10;
-    public Bomb bombs[] = new Bomb[MAX_BOMBS];
+    public Bomb bombs[];
 
     private void addBomb(int x, int y)
     {
@@ -162,26 +165,27 @@ public class BattleState extends State
 
     public void enter()
     {
+        bombs = new Bomb[MAX_BOMBS];
+
         GameEngine.setBackdrop(GameResources.battleBackground);
         GameEngine.createButton(GameEngine.screenWidth - 100, GameEngine.screenHeight - 100,
                 200, 200, "BOMB!", BUTTON_BOMB);
         GameEngine.setTileSet(GameResources.tileSet);
         GameEngine.setTileMap(GameResources.level1TileMap);
 
-        player = new Bomber(50, 50);
-        enemy = new Bomber(120, 100);
+        player = new Player(50, 50);
 
-        playerController = new PlayerController(player);
-        enemyController = new EnemyController(enemy, this);
+        bombers[0] = player;
+
+        for (int i = 1; i < bombers.length; i++)
+            bombers[i] = new Enemy(120, 100, this);
     }
 
     public void update()
     {
-        // Update enemy
-        enemyController.update();
-
-        // Update player
-        playerController.update();
+        for (Bomber bomber : bombers)
+            if (bomber != null)
+                bomber.update();
 
         // Update bombs
         for (Bomb bomb : bombs)
@@ -190,19 +194,29 @@ public class BattleState extends State
             {
                 bomb.update();
                 if (bomb.explosionDone())
-                    
                     removeBomb(bomb);
             }
         }
 
         // center screen on player
         GameEngine.setCenterCoord(player.x, player.y);
-    }
 
-    public void exit()
-    {
-        GameEngine.setBackdrop(null);
-        GameEngine.destroyAllButtons();
+        for (int i = 0; i < bombers.length; i++) {
+            if (bombers[i] != null && bombers[i].isOnFireTile()) {
+                GameEngine.destroySprite(bombers[i].sprite);
+                bombers[i] = null;
+            }
+        }
+
+        int aliveCount = 0;
+        for (Bomber bomber : bombers)
+            if (bomber != null)
+                aliveCount++;
+
+        if (bombers[0] == null)  // player lost
+            GameEngine.setState(EndGameState.instance);
+        else if (aliveCount <= 1)  // player won
+            GameEngine.setState(EndGameState.instance);
     }
 
     public void onButton(int buttonId)
@@ -220,6 +234,7 @@ public class BattleState extends State
         }
     }
 
+    /*
     public  void explode(Bomb bomb){
         int tileX = bomb.getSprite().x/GameEngine.TILE_WIDTH;
         int tileY = bomb.getSprite().y/GameEngine.TILE_HEIGHT;
@@ -242,17 +257,17 @@ public class BattleState extends State
                     }
 
                 }
-
-
             }
         }
     }
+    */
+
     public void onTouchDown(int x, int y)
     {
-        playerController.onTouchDown(x, y);
+        player.onTouchDown(x, y);
     }
 
     public void onTouchUp(int x, int y) {
-        playerController.onTouchUp(x, y);
+        player.onTouchUp(x, y);
     }
 }

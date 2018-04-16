@@ -84,7 +84,7 @@ public class GameEngine
             for (int i = 0; i < tileMaps.length; i++) {
                 // draw tilemap
                 byte tileMap[][] = tileMaps[i];
-                if (tileMaps != null && tileSet != null) {
+                if (tileMap != null && tileSet != null) {
                     int tileWidth = TILE_WIDTH * displayScale;
                     int tileHeight = TILE_HEIGHT * displayScale;
                     int tileX, tileY;
@@ -201,6 +201,13 @@ public class GameEngine
 
     public static void setTileMap(byte[][] map)
     {
+        if (map == null)  // disable tile map
+        {
+            tileMaps[0] = null;
+            tileMaps[1] = null;
+            return;
+        }
+
         int columns = map[0].length;
         int rows = map.length;
 
@@ -271,6 +278,10 @@ public class GameEngine
                 {
                     if (currState != null)
                         currState.exit();
+                    destroyAllButtons();
+                    destroyAllSprites();
+                    setTileMap(null);
+                    setBackdrop(null);
                     currState = nextState;
                     currState.enter();
                 }
@@ -339,6 +350,12 @@ public class GameEngine
         }
     }
 
+    public static void destroyAllSprites()
+    {
+        for (int i = 0; i < sprites.length; i++)
+            sprites[i] = null;
+    }
+
     public static void setCenterCoord(int x, int y)
     {
         xoffset = screenWidth / displayScale / 2 - x;
@@ -366,28 +383,5 @@ public class GameEngine
                 break;
             }
         }
-        /*
-        // create new media player
-        for (int i = 0; i < mediaPlayers.length; i++)
-        {
-            if (mediaPlayers[i] == null)
-            {
-                //Log.d("soundtest", "using media player " + i);
-                mediaPlayers[i] = new MediaPlayer();
-                try {
-                    //mediaPlayers[i].reset();
-                    mediaPlayers[i].setDataSource(sound);
-                    mediaPlayers[i].prepare();
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                    return;
-                }
-                mediaPlayers[i].start();
-                return;
-            }
-        }
-        */
     }
 }

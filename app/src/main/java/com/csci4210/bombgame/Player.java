@@ -2,19 +2,18 @@ package com.csci4210.bombgame;
 
 import com.csci4210.engine.GameEngine;
 
-public class PlayerController
+public class Player extends Bomber
 {
-    Bomber bomber;
     Direction walkDir;
 
-    PlayerController(Bomber bomber)
+    Player(int x, int y)
     {
-        this.bomber = bomber;
+        super(x, y);
     }
 
     public void update()
     {
-        bomber.walk(walkDir);
+        walk(walkDir);
     }
 
     // respond to input

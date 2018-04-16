@@ -3,7 +3,7 @@ package com.csci4210.bombgame;
 import com.csci4210.engine.GameEngine;
 import com.csci4210.engine.Sprite;
 
-class Bomber
+abstract class Bomber
 {
     final int WIDTH = 16;
     final int HEIGHT = 16;
@@ -11,6 +11,8 @@ class Bomber
     int x;
     int y;
     Direction direction;
+
+    public abstract void update();
 
     public void faceDirection(Direction direction)
     {
@@ -126,5 +128,10 @@ class Bomber
             // was not able to move
             return false;
         }
+    }
+
+    public boolean isOnFireTile()
+    {
+        return (GameEngine.getTileAtCoord(1, x, y) == GameResources.TILE_FIRE);
     }
 }

@@ -70,6 +70,6 @@ class TestState extends State
 
     public void onBackPressed()
     {
-        GameEngine.setState(MainActivity.title);
+        GameEngine.setState(TitleState.instance);
     }
 }

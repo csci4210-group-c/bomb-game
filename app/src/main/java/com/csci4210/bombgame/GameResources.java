@@ -5,13 +5,9 @@ package com.csci4210.bombgame;
  */
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaPlayer;
-
-import java.io.FileDescriptor;
 
 import static com.csci4210.engine.Sprite.*;
 
@@ -60,7 +56,7 @@ class GameResources
         {ANIMCMD_FRAME, 3, 10},
         {ANIMCMD_FRAME, 4, 10},
         {ANIMCMD_FRAME, 5, 10},
-        {ANIMCMD_FRAME, 6, 100},
+        {ANIMCMD_FRAME, 6, 10},
         {ANIMCMD_END, 0},
     };
 
