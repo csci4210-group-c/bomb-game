@@ -92,6 +92,7 @@ class GameResources
         tileSet                = BitmapFactory.decodeResource(rsrc, R.drawable.alltiles, opts);
         battleBackground       = BitmapFactory.decodeResource(rsrc, R.drawable.outfloor, opts);
         blastSequence          = BitmapFactory.decodeResource(rsrc, R.drawable.blastsprite, opts);
+        lossMessage            = BitmapFactory.decodeResource(rsrc, R.drawable.lose, opts);
         winMessage             = BitmapFactory.decodeResource(rsrc, R.drawable.win, opts);
 
         placeBomb = R.raw.drop_bomb;

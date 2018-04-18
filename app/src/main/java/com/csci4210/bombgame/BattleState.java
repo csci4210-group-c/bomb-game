@@ -135,7 +135,7 @@ public class BattleState extends State
 {
     public static final BattleState instance = new BattleState();
 
-    private Bomber bombers[] = new Bomber[5];
+    public Bomber bombers[] = new Bomber[5];
     private Player player;
 
     final int BUTTON_BOMB = 0;

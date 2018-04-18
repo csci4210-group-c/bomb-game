@@ -12,8 +12,13 @@ public class EndGameState extends State
 
     public void enter()
     {
+        if(BattleState.instance.bombers[0] == null)
+            GameEngine.setBackdrop(GameResources.lossMessage);
+        else
+            GameEngine.setBackdrop(GameResources.winMessage);
+
         GameEngine.createButton(
-                GameEngine.screenWidth / 2, GameEngine.screenHeight / 2 - 200,
+                GameEngine.screenWidth / 2, GameEngine.screenHeight / 2,
                 300, 100, "Play Again", BUTTON_PLAY_AGAIN);
         GameEngine.createButton(
                 GameEngine.screenWidth / 2, GameEngine.screenHeight / 2 + 200,
