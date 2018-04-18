@@ -9,13 +9,19 @@ public class EndGameState extends State
 
     private static final int BUTTON_PLAY_AGAIN = 0;
     private static final int BUTTON_QUIT = 1;
+    private boolean won;
+
+    public void setResult(boolean won)
+    {
+        this.won = won;
+    }
 
     public void enter()
     {
-        if(BattleState.instance.bombers[0] == null)
-            GameEngine.setBackdrop(GameResources.lossMessage);
-        else
+        if(won)
             GameEngine.setBackdrop(GameResources.winMessage);
+        else
+            GameEngine.setBackdrop(GameResources.lossMessage);
 
         GameEngine.createButton(
                 GameEngine.screenWidth / 2, GameEngine.screenHeight / 2,

@@ -6,8 +6,33 @@ import android.widget.Switch;
 import com.csci4210.engine.GameEngine;
 import com.csci4210.engine.Sprite;
 import com.csci4210.engine.State;
+import com.csci4210.engine.TextLabel;
 
 import java.util.ArrayList;
+
+class Clock
+{
+    int ticksLeft;
+    TextLabel label;
+
+    Clock(int seconds)
+    {
+        ticksLeft = seconds * GameEngine.TICKS_PER_SECOND;
+        label = GameEngine.createTextLabel(GameEngine.screenWidth / 2, 100, "");
+    }
+
+    void update()
+    {
+        ticksLeft--;
+        if (ticksLeft < 0)
+            ticksLeft = 0;
+
+        int seconds = (ticksLeft / GameEngine.TICKS_PER_SECOND) % 60;
+        int minutes = (ticksLeft / GameEngine.TICKS_PER_SECOND) / 60;
+
+        label.setText(String.format("%d:%02d", minutes, seconds));
+    }
+}
 
 class Bomb
 {
@@ -142,6 +167,7 @@ public class BattleState extends State
 
     private final int MAX_BOMBS = 10;
     public Bomb bombs[];
+    private Clock clock;
 
     private void addBomb(int x, int y)
     {
@@ -179,10 +205,14 @@ public class BattleState extends State
 
         for (int i = 1; i < bombers.length; i++)
             bombers[i] = new Enemy(120, 100, this);
+
+        clock = new Clock(100);
     }
 
     public void update()
     {
+        clock.update();
+
         for (Bomber bomber : bombers)
             if (bomber != null)
                 bomber.update();
@@ -213,10 +243,16 @@ public class BattleState extends State
             if (bomber != null)
                 aliveCount++;
 
-        if (bombers[0] == null)  // player lost
+        if (clock.ticksLeft == 0 || bombers[0] == null)  // player lost
+        {
+            EndGameState.instance.setResult(false);
             GameEngine.setState(EndGameState.instance);
+        }
         else if (aliveCount <= 1)  // player won
+        {
+            EndGameState.instance.setResult(true);
             GameEngine.setState(EndGameState.instance);
+        }
     }
 
     public void onButton(int buttonId)

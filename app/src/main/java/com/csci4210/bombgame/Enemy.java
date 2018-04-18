@@ -22,6 +22,33 @@ public class Enemy extends Bomber
         bestDirection = Direction.random();
     }
 
+    private int[] getMaxInDirection(Direction d)
+    {
+        int destCoords[] = new int[2];
+        int xinc = 0;
+        int yinc = 0;
+
+        switch (d)
+        {
+            case UP:    yinc = -1; break;
+            case DOWN:  yinc = +1; break;
+            case LEFT:  xinc = -1; break;
+            case RIGHT: xinc = +1; break;
+        }
+
+        destCoords[0] = x;
+        destCoords[1] = y;
+        for (int i = 0; i < GameEngine.TILE_WIDTH * 5; i++)
+        {
+            if (GameEngine.getTileAtCoord(0, destCoords[0], destCoords[1]) != GameResources.TILE_GRASS)
+                break;
+            destCoords[0] += xinc;
+            destCoords[1] += yinc;
+        }
+
+        return destCoords;
+    }
+
     public void update()
     {
         if (stepsRemaining == 0 || !walk(bestDirection))
@@ -35,10 +62,11 @@ public class Enemy extends Bomber
                 if (!canWalkInDirection(d))
                     continue;
 
+                int sum = 0;
+                /*
                 int x = this.x;
                 int y = this.y;
                 final int offset = GameEngine.TILE_WIDTH * 5;
-                int sum = 0;
 
                 switch (d)
                 {
@@ -47,6 +75,10 @@ public class Enemy extends Bomber
                     case LEFT:  x -= offset; break;
                     case RIGHT: x += offset; break;
                 }
+                */
+                int destCoords[] = getMaxInDirection(d);
+                int x = destCoords[0];
+                int y = destCoords[1];
 
                 for (Bomb b : battleState.bombs)
                 {

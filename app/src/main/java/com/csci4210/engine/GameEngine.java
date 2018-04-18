@@ -23,8 +23,12 @@ import android.view.View;
 
 import com.csci4210.bombgame.MainActivity;
 
+import org.w3c.dom.Text;
+
 import java.io.FileDescriptor;
 import java.io.IOException;
+
+
 
 public class GameEngine
 {
@@ -35,7 +39,8 @@ public class GameEngine
     public static final int TILE_HEIGHT = 32;
     private static final int MAX_SPRITES = 16;
     private static final int MAX_BUTTONS = 12;
-    private static final int TICKS_PER_SECOND = 60;
+    private static final int MAX_TEXT_LABELS = 5;
+    public static final int TICKS_PER_SECOND = 60;
 
     public static int screenWidth;
     public static int screenHeight;
@@ -44,13 +49,14 @@ public class GameEngine
     private static byte tileMaps[][][] = new byte[2][][];
     private static Sprite sprites[] = new Sprite[MAX_SPRITES];
     private static Button buttons[] = new Button[MAX_BUTTONS];
+    private static TextLabel textLabels[] = new TextLabel[MAX_TEXT_LABELS];
     private static Bitmap backdrop;
     private static GameView gameView;
     private static State currState;
     private static State nextState;
     private static Button pushedButton;
     private static MediaPlayer mediaPlayers[] = new MediaPlayer[4];
-    private static Context context;
+    private static Activity context;
 
     static class GameView extends View
     {
@@ -138,6 +144,15 @@ public class GameEngine
                     paint.setShader(null);
                     paint.setColor(Color.WHITE);
                     canvas.drawText(button.label, button.x, button.y + (pushed ? 2 * displayScale : 0), paint);
+                }
+            }
+
+            // draw text labels
+            for (TextLabel label : GameEngine.textLabels)
+            {
+                if (label != null)
+                {
+                    canvas.drawText(label.text, label.x, label.y, paint);
                 }
             }
         }
@@ -276,12 +291,24 @@ public class GameEngine
                 // handle state change
                 if (nextState != currState)
                 {
+                    if (nextState == null)  // Exit if state was set to null
+                    {
+                        context.finish();
+                        return;
+                    }
+
+                    // End current state
                     if (currState != null)
                         currState.exit();
+
+                    // Clean up resources
                     destroyAllButtons();
                     destroyAllSprites();
+                    destroyAllTextLabels();
                     setTileMap(null);
                     setBackdrop(null);
+
+                    // Start new state
                     currState = nextState;
                     currState.enter();
                 }
@@ -383,5 +410,24 @@ public class GameEngine
                 break;
             }
         }
+    }
+
+    public static TextLabel createTextLabel(int x, int y, String text)
+    {
+        for (int i = 0; i < textLabels.length; i++)
+        {
+            if (textLabels[i] == null)
+            {
+                textLabels[i] = new TextLabel(x, y, text);
+                return textLabels[i];
+            }
+        }
+        return null;
+    }
+
+    static void destroyAllTextLabels()
+    {
+        for (int i = 0; i < textLabels.length; i++)
+            textLabels[i] = null;
     }
 }
