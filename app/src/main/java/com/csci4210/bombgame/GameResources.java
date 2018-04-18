@@ -21,6 +21,8 @@ class GameResources
     static Bitmap tileSet;
     static Bitmap battleBackground;
     static Bitmap blastSequence;
+    static Bitmap lossMessage;
+    static Bitmap winMessage;
 
     static int placeBomb;
     static int detonateBomb;
@@ -90,6 +92,7 @@ class GameResources
         tileSet                = BitmapFactory.decodeResource(rsrc, R.drawable.alltiles, opts);
         battleBackground       = BitmapFactory.decodeResource(rsrc, R.drawable.outfloor, opts);
         blastSequence          = BitmapFactory.decodeResource(rsrc, R.drawable.blastsprite, opts);
+        winMessage             = BitmapFactory.decodeResource(rsrc, R.drawable.win, opts);
 
         placeBomb = R.raw.drop_bomb;
         detonateBomb = R.raw.explosion;
