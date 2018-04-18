@@ -24,6 +24,8 @@ public class Enemy extends Bomber
 
     public void update()
     {
+        if (Math.random() < 0.001)
+            BattleState.instance.addBomb(x, y);
         if (stepsRemaining == 0 || !walk(bestDirection))
         {
             int maxSum = 0;
