@@ -1,14 +1,10 @@
 package com.csci4210.bombgame;
 
-import android.util.Log;
-import android.widget.Switch;
 
 import com.csci4210.engine.GameEngine;
 import com.csci4210.engine.Sprite;
 import com.csci4210.engine.State;
 import com.csci4210.engine.TextLabel;
-
-import java.util.ArrayList;
 
 class Clock
 {

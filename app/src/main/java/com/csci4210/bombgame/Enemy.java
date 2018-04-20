@@ -8,8 +8,7 @@ import com.csci4210.engine.GameEngine;
 public class Enemy extends Bomber
 {
     private BattleState battleState;
-
-    private static final int maxDepth = 2;
+    
     private int stepsRemaining;
 
     private Direction[] dirs = {Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT};
