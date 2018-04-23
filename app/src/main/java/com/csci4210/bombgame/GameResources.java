@@ -11,7 +11,7 @@ import android.graphics.BitmapFactory;
 
 import static com.csci4210.engine.Sprite.*;
 
-class GameResources
+public  class GameResources
 {
     static Bitmap bomberSpriteSheetUp;
     static Bitmap bomberSpriteSheetDown;

@@ -1,21 +1,42 @@
 package com.csci4210.engine;
 
+import com.csci4210.bombgame.GameResources;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+
 
 /**
  * Created by Pr.Game on 4/23/2018.
  */
 public class GameEngineTest {
 
+    static final byte TILE_GRASS = 1;
+    static final byte TILE_BRICK = 2;
+    static final byte TILE_STONE = 3;
+    static final byte TILE_FIRE = 4;
+
+    static final byte level1TileMap[][] = {
+            {TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_BRICK, TILE_GRASS, TILE_BRICK, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_BRICK, TILE_GRASS},
+            {TILE_BRICK, TILE_GRASS, TILE_BRICK, TILE_STONE, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS},
+            {TILE_STONE, TILE_GRASS, TILE_BRICK, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_STONE},
+            {TILE_BRICK, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_STONE, TILE_STONE},
+            {TILE_BRICK, TILE_GRASS, TILE_GRASS, TILE_BRICK, TILE_GRASS, TILE_BRICK, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_STONE, TILE_BRICK, TILE_BRICK},
+            {TILE_GRASS, TILE_GRASS, TILE_BRICK, TILE_GRASS, TILE_BRICK, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_BRICK},
+            {TILE_GRASS, TILE_STONE, TILE_BRICK, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_STONE, TILE_STONE, TILE_STONE, TILE_GRASS},
+            {TILE_GRASS, TILE_GRASS, TILE_BRICK, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS},
+            {TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_BRICK, TILE_GRASS, TILE_BRICK, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_BRICK, TILE_GRASS},
+    };
 
     @Test
     public void getTileAtCoord() throws Exception {
+
+        GameEngine.setTileMap(level1TileMap);
         int inputX = 50;
         int inputY=50;
-        int inputMapNum = 1;
-        int expectedOutput = 2;
+        int inputMapNum = 0;
+        int expectedOutput = 1;
         int output = GameEngine.getTileAtCoord(inputMapNum,inputX,inputY);
         assertEquals(expectedOutput,output);
     }

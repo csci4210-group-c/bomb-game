@@ -1,5 +1,6 @@
 package com.csci4210.bombgame;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
@@ -32,7 +33,7 @@ public class BomberTest {
         //GameResources.load(context);
 
 
-        //GameEngine.init(activity);
+        GameEngine.init((Activity)context);
         //GameEngine.setState(TitleState.instance);
         //GameEngine.mainLoop();
     }
