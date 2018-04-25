@@ -20,7 +20,7 @@ public class PlayerTest {
 
     @Test
     public void onTouchDown() throws Exception {
-        int inputx
+
     }
 
     @Test

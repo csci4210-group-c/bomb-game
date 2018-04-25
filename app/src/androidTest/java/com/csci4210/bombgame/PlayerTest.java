@@ -24,7 +24,7 @@ public class PlayerTest {
     @Before
     public void setUp(){
         activity = (MainActivity) InstrumentationRegistry.getTargetContext();
-        
+
          player = new Player(5,50);
 
     }

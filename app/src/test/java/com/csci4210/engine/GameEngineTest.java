@@ -2,6 +2,7 @@ package com.csci4210.engine;
 
 import com.csci4210.bombgame.GameResources;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -29,16 +30,44 @@ public class GameEngineTest {
             {TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_BRICK, TILE_GRASS, TILE_BRICK, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_GRASS, TILE_BRICK, TILE_GRASS},
     };
 
+    @Before
+    public void setUp(){
+        GameEngine.setTileMap(level1TileMap);
+    }
     @Test
     public void getTileAtCoord() throws Exception {
 
-        GameEngine.setTileMap(level1TileMap);
-        int inputX = 50;
-        int inputY=50;
+
+        int inputX = 32;
+        int inputY=32;
         int inputMapNum = 0;
         int expectedOutput = 1;
         int output = GameEngine.getTileAtCoord(inputMapNum,inputX,inputY);
         assertEquals(expectedOutput,output);
+    }
+
+    @Test
+    public void getTile () throws Exception {
+
+        int inputX =4;
+        int inputY=5;
+        int inputMapNum = 0;
+
+        int expectedOutput = 2;
+        byte output = GameEngine.getTile(inputMapNum,inputX,inputY);
+        assertEquals(expectedOutput,output);
+    }
+
+    @Test
+    public void setTile() throws Exception{
+        int inputX =1;
+        int inputY=6;
+        int inputMapNum = 0;
+        byte tile = 2;
+        GameEngine.setTile(inputMapNum,inputX,inputY,tile);
+        byte outputTile = GameEngine.getTile(inputMapNum,inputX,inputY);
+        assertEquals(tile,outputTile);
+
     }
 
 }
