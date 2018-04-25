@@ -8,7 +8,7 @@ import com.csci4210.engine.GameEngine;
 public class Enemy extends Bomber
 {
     private BattleState battleState;
-    
+
     private int stepsRemaining;
 
     private Direction[] dirs = {Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT};
@@ -50,8 +50,8 @@ public class Enemy extends Bomber
 
     public void update()
     {
-        if (Math.random() < 0.001)
-            BattleState.instance.addBomb(x, y);
+        /*if (Math.random() < 0.001)
+            BattleState.instance.addBomb(x, y);*/
         if (stepsRemaining == 0 || !walk(bestDirection))
         {
             int maxSum = 0;

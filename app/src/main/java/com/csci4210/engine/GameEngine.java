@@ -55,7 +55,7 @@ public class GameEngine
     private static State currState;
     private static State nextState;
     private static Button pushedButton;
-    private static MediaPlayer mediaPlayers[] = new MediaPlayer[4];
+    public static MediaPlayer mediaPlayers[] = new MediaPlayer[4];
     private static Activity context;
 
     static class GameView extends View
@@ -68,7 +68,7 @@ public class GameEngine
             super(context);
             paint = new Paint();
             paint.setColor(Color.rgb(255, 255, 255));
-            paint.setTextSize(20);
+            paint.setTextSize(30);
             paint.setTextAlign(Paint.Align.CENTER);
             this.setBackgroundColor(Color.BLACK);
         }

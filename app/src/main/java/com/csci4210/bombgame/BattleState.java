@@ -190,8 +190,8 @@ public class BattleState extends State
         bombs = new Bomb[MAX_BOMBS];
 
         GameEngine.setBackdrop(GameResources.battleBackground);
-        GameEngine.createButton(GameEngine.screenWidth - 100, GameEngine.screenHeight - 100,
-                200, 200, "BOMB!", BUTTON_BOMB);
+        GameEngine.createButton(GameEngine.screenWidth - 70, GameEngine.screenHeight - 70,
+                140, 140, "BOMB!", BUTTON_BOMB);
         GameEngine.setTileSet(GameResources.tileSet);
         GameEngine.setTileMap(GameResources.level1TileMap);
 
@@ -200,9 +200,9 @@ public class BattleState extends State
         bombers[0] = player;
 
         for (int i = 1; i < bombers.length; i++)
-            bombers[i] = new Enemy(120, 100, this);
+            bombers[i] = new Enemy(16 + 96*i, 16 + 64*i, this);
 
-        clock = new Clock(100);
+        clock = new Clock(180);
     }
 
     public void update()
@@ -239,8 +239,14 @@ public class BattleState extends State
             if (bomber != null)
                 aliveCount++;
 
+        if (clock.ticksLeft < 420)
+            GameEngine.playSound(GameResources.timeWarning);
+
         if (clock.ticksLeft == 0 || bombers[0] == null)  // player lost
         {
+            for(int i=0; i<GameEngine.mediaPlayers.length; i++)
+                GameEngine.mediaPlayers[i].release();
+
             EndGameState.instance.setResult(false);
             GameEngine.setState(EndGameState.instance);
         }
