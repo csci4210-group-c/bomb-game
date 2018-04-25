@@ -26,7 +26,7 @@ class Clock
         int seconds = (ticksLeft / GameEngine.TICKS_PER_SECOND) % 60;
         int minutes = (ticksLeft / GameEngine.TICKS_PER_SECOND) / 60;
 
-        label.setText(String.format("%d:%02d", minutes, seconds));
+        label.setText(String.format("TIME LEFT %d:%02d", minutes, seconds));
     }
 }
 
@@ -244,9 +244,6 @@ public class BattleState extends State
 
         if (clock.ticksLeft == 0 || bombers[0] == null)  // player lost
         {
-            for(int i=0; i<GameEngine.mediaPlayers.length; i++)
-                GameEngine.mediaPlayers[i].release();
-
             EndGameState.instance.setResult(false);
             GameEngine.setState(EndGameState.instance);
         }
@@ -271,34 +268,6 @@ public class BattleState extends State
             break;
         }
     }
-
-    /*
-    public  void explode(Bomb bomb){
-        int tileX = bomb.getSprite().x/GameEngine.TILE_WIDTH;
-        int tileY = bomb.getSprite().y/GameEngine.TILE_HEIGHT;
-        for(int i=-1; i<2;i++){
-            int j=0;
-            switch (j){
-                case -1:{
-                    if(GameResources.level1TileMap[tileX+i][tileY+j]== GameResources.TILE_BRICK) {
-                        GameResources.level1TileMap[tileX + i][tileY + j] = GameResources.TILE_GRASS;
-                    }
-                }
-                case 0:{
-                    if(GameResources.level1TileMap[tileX+i][tileY+j]== GameResources.TILE_BRICK) {
-                        GameResources.level1TileMap[tileX + i][tileY + j] = GameResources.TILE_GRASS;
-                    }
-                }
-                case 1:{
-                    if(GameResources.level1TileMap[tileX+i][tileY+j]== GameResources.TILE_BRICK) {
-                        GameResources.level1TileMap[tileX + i][tileY + j] = GameResources.TILE_GRASS;
-                    }
-
-                }
-            }
-        }
-    }
-    */
 
     public void onTouchDown(int x, int y)
     {

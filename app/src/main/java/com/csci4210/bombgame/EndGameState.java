@@ -20,19 +20,18 @@ public class EndGameState extends State
     {
         if(won){
             GameEngine.setBackdrop(GameResources.winMessage);
-            GameEngine.createButton(
-                GameEngine.screenWidth / 2, GameEngine.screenHeight / 2,
-                300, 100, "PLAY AGAIN", BUTTON_PLAY_AGAIN);
         }
         else {
             GameEngine.setBackdrop(GameResources.lossMessage);
-            GameEngine.createButton(
-                    GameEngine.screenWidth / 2, GameEngine.screenHeight / 2,
-                    300, 100, "TRY AGAIN", BUTTON_PLAY_AGAIN);
         }
         GameEngine.createButton(
+                GameEngine.screenWidth / 2, GameEngine.screenHeight / 2,
+                300, 100, "PLAY AGAIN", BUTTON_PLAY_AGAIN);
+        GameEngine.createButton(
                 GameEngine.screenWidth / 2, GameEngine.screenHeight / 2 + 200,
-                300, 100, "GIVE UP", BUTTON_QUIT);
+                300, 100, "QUIT GAME", BUTTON_QUIT);
+        for(int i=0; i<GameEngine.mediaPlayers.length; i++)
+            GameEngine.mediaPlayers[i].stop();
     }
 
     public void onButton(int button)
