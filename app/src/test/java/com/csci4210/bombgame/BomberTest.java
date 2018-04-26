@@ -1,5 +1,8 @@
 package com.csci4210.bombgame;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import com.csci4210.engine.GameEngine;
@@ -21,7 +24,6 @@ import static org.junit.Assert.*;
 public class BomberTest {
 
     static final byte level1TileMap[][] = GameResources.level1TileMap;
-
     Bomber bomber ;
     Direction direction;
 
@@ -57,6 +59,7 @@ public class BomberTest {
     @Test
     // to be fixed with correct values
     public void walk(){
+
         direction = Direction.RIGHT;
         boolean expectedOutput = bomber.walk(direction);
         int expectedX = 0;
@@ -67,5 +70,15 @@ public class BomberTest {
         assertEquals(expectedX,actualX);
         assertEquals(expectedY,actualY);
 
+    }
+
+    @Test
+    // Have not been setUp correctly, to set up later
+    public void faceDirection(){
+        bomber.faceDirection(Direction.UP);
+        Bitmap expected = bomber.sprite.spriteSheet;
+        Bitmap actual = GameResources.bomberSpriteSheetLeft;
+        System.out.println(expected);
+        assertEquals(expected,actual);
     }
 }

@@ -21,7 +21,7 @@ public class Enemy extends Bomber
         bestDirection = Direction.random();
     }
 
-    private int[] getMaxInDirection(Direction d)
+    public int[] getMaxInDirection(Direction d)
     {
         int destCoords[] = new int[2];
         int xinc = 0;

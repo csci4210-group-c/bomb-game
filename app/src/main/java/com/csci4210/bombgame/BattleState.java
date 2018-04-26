@@ -43,7 +43,7 @@ class Bomb
         timeRemaining = 5 * 60;
     }
 
-    private boolean blastTile(int x, int y)
+    public boolean blastTile(int x, int y)
     {
         int tile = GameEngine.getTile(0, x, y);
 

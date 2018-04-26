@@ -21,6 +21,27 @@ public class BombTest {
         bomb = new Bomb(32,32);
     }
 
+    @Test
+    public void blastTile(){
+        // case 1
+        boolean expectedOutput = bomb.blastTile(3,1);
+        boolean actualOutput = false;
+        int expectedTile = GameEngine.getTile(0,3,1);
+        int actualTile=3;
+        assertEquals(expectedTile,actualTile);
+        assertEquals(expectedOutput,actualOutput);
+
+        // case 2
+        expectedOutput = bomb.blastTile(2,1);
+        actualOutput = true;
+        expectedTile = GameEngine.getTile(0,2,1);
+        actualTile=1;
+        assertEquals(expectedTile,actualTile);
+        assertEquals(expectedOutput,actualOutput);
+    }
+
+
+
 
 
 }
