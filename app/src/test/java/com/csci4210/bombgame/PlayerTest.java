@@ -16,15 +16,36 @@ import static org.junit.Assert.*;
 public class PlayerTest {
 
 
-    Player player = new Player(50,50);
+    Player player ;
 
+    @Before
+    public void setUp(){
+        player = new Player(50,50);
+
+        GameEngine.screenHeight = 400;
+        GameEngine.screenWidth=800;
+
+    }
     @Test
     public void onTouchDown() throws Exception {
 
+        int inputX=80;
+        int inputY=50;
+        player.onTouchDown(inputX,inputY);
+        Direction expectedDirection = Direction.LEFT;
+        Direction actualDirection = player.walkDir;
+        assertEquals(expectedDirection,actualDirection);
     }
 
     @Test
     public void onTouchUp() throws Exception {
+        int inputX=80;
+        int inputY=50;
+        player.onTouchUp(inputX,inputY);
+        Direction expectedDirection = null;
+        Direction actualDirection = player.walkDir;
+        assertEquals(expectedDirection,actualDirection);
+
     }
 
 }

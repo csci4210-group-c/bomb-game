@@ -22,6 +22,8 @@ import static org.junit.Assert.*;
 
 public class BomberTest {
 
+    // This is not working, to be fixed later
+
 
     private Context context;
 

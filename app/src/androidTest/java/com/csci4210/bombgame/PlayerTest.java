@@ -16,6 +16,7 @@ import static org.junit.Assert.*;
  */
 public class PlayerTest {
 
+    // This is not working .. to be fixed later
     private MainActivity activity;
     private Context context;
 
