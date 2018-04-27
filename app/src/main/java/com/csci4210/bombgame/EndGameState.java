@@ -30,8 +30,8 @@ public class EndGameState extends State
         GameEngine.createButton(
                 GameEngine.screenWidth / 2, GameEngine.screenHeight / 2 + 200,
                 300, 100, "QUIT GAME", BUTTON_QUIT);
-        for(int i=0; i<GameEngine.mediaPlayers.length; i++)
-            GameEngine.mediaPlayers[i].stop();
+       // for(int i=0; i<GameEngine.mediaPlayers.length; i++)
+         //   GameEngine.mediaPlayers[i].stop();
     }
 
     public void onButton(int button)

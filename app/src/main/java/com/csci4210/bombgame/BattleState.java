@@ -202,7 +202,7 @@ public class BattleState extends State
         for (int i = 1; i < bombers.length; i++)
             bombers[i] = new Enemy(16 + 96*i, 16 + 64*i, this);
 
-        clock = new Clock(180);
+        clock = new Clock(60);
     }
 
     public void update()
@@ -239,7 +239,7 @@ public class BattleState extends State
             if (bomber != null)
                 aliveCount++;
 
-        if (clock.ticksLeft < 420)
+        if (clock.ticksLeft < 1265)
             GameEngine.playSound(GameResources.timeWarning);
 
         if (clock.ticksLeft == 0 || bombers[0] == null)  // player lost
