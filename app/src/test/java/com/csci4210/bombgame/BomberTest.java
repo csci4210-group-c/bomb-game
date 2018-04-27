@@ -32,7 +32,7 @@ public class BomberTest {
     @Before
     public void setUp(){
         GameEngine.setTileMap(level1TileMap);
-        bomber = new Player(30,30);
+        bomber = new Player(45,60);
 
 
     }
@@ -43,32 +43,73 @@ public class BomberTest {
     }
 
     @Test
-    // to be fixed with correct values
+
     public void canWalkDirection(){
+
         // case 1 :
         direction = Direction.RIGHT;
         boolean expectedOutput = bomber.canWalkInDirection(direction);
-        assertFalse(expectedOutput); // when actual output should be false
+        assertTrue(expectedOutput);
         // case 2 :
         direction = Direction.LEFT;
         expectedOutput = bomber.canWalkInDirection(direction);
-        assertTrue(expectedOutput); // when actual output should be true
+        assertTrue(expectedOutput);
+        // case 3
+        direction = Direction.UP;
+        expectedOutput = bomber.canWalkInDirection(direction);
+        assertTrue(expectedOutput);
+        //case 4
+        direction = Direction.DOWN;
+        expectedOutput = bomber.canWalkInDirection(direction);
+        assertTrue(expectedOutput);
 
     }
 
     @Test
-    // to be fixed with correct values
+
     public void walk(){
 
+        // case 1
         direction = Direction.RIGHT;
         boolean expectedOutput = bomber.walk(direction);
-        int expectedX = 0;
-        int expectedY = 0;
+        int expectedX = 46;
+        int expectedY = 60;
         int actualX =bomber.x;
         int actualY=bomber.y;
         assertTrue(expectedOutput);
         assertEquals(expectedX,actualX);
         assertEquals(expectedY,actualY);
+        // case 2
+        direction = Direction.LEFT;
+         expectedOutput = bomber.walk(direction);
+         expectedX = 45;
+         expectedY = 60;
+         actualX =bomber.x;
+         actualY=bomber.y;
+        assertTrue(expectedOutput);
+        assertEquals(expectedX,actualX);
+        assertEquals(expectedY,actualY);
+        // case 3
+        direction = Direction.UP;
+         expectedOutput = bomber.walk(direction);
+         expectedX = 45;
+         expectedY = 59;
+         actualX =bomber.x;
+         actualY=bomber.y;
+        assertTrue(expectedOutput);
+        assertEquals(expectedX,actualX);
+        assertEquals(expectedY,actualY);
+        // case 4
+        direction = Direction.DOWN;
+        expectedOutput = bomber.walk(direction);
+        expectedX = 45;
+        expectedY = 60;
+        actualX =bomber.x;
+        actualY=bomber.y;
+        assertTrue(expectedOutput);
+        assertEquals(expectedX,actualX);
+        assertEquals(expectedY,actualY);
+
 
     }
 
