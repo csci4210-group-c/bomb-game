@@ -40,7 +40,7 @@ class Bomb
     {
         sprite = GameEngine.createSprite(GameResources.blastSequence, GameResources.bombFlashAnimSeq,
                 x, y, 32, 32);
-        timeRemaining = 5 * 60;
+        timeRemaining = 275;
     }
 
     private boolean blastTile(int x, int y)
@@ -202,7 +202,7 @@ public class BattleState extends State
         for (int i = 1; i < bombers.length; i++)
             bombers[i] = new Enemy(16 + 96*i, 16 + 64*i, this);
 
-        clock = new Clock(60);
+        clock = new Clock(120);
     }
 
     public void update()
@@ -239,7 +239,7 @@ public class BattleState extends State
             if (bomber != null)
                 aliveCount++;
 
-        if (clock.ticksLeft < 1265)
+        if (clock.ticksLeft < 300)
             GameEngine.playSound(GameResources.timeWarning);
 
         if (clock.ticksLeft == 0 || bombers[0] == null)  // player lost
