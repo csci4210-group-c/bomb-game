@@ -2,7 +2,7 @@ package com.csci4210.bombgame;
 
 import com.csci4210.engine.GameEngine;
 
-public class Player extends Bomber
+public class Player extends Bomber implements VaryingSprites
 {
     Direction walkDir;
 
@@ -16,6 +16,28 @@ public class Player extends Bomber
         walk(walkDir);
     }
 
+    @Override
+    public void faceDirection(Direction direction)
+    {
+        if (this.direction == direction)
+            return;
+        this.direction = direction;
+        switch (direction)
+        {
+            case UP:
+                sprite.spriteSheet = GameResources.heroSpriteSheetUp;
+                break;
+            case DOWN:
+                sprite.spriteSheet = GameResources.heroSpriteSheetDown;
+                break;
+            case LEFT:
+                sprite.spriteSheet = GameResources.heroSpriteSheetLeft;
+                break;
+            case RIGHT:
+                sprite.spriteSheet = GameResources.heroSpriteSheetRight;
+                break;
+        }
+    }
     // respond to input
 
     public void onTouchDown(int x, int y)

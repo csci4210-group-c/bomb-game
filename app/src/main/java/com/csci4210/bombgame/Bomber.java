@@ -3,7 +3,7 @@ package com.csci4210.bombgame;
 import com.csci4210.engine.GameEngine;
 import com.csci4210.engine.Sprite;
 
-abstract class Bomber
+abstract class Bomber implements VaryingSprites
 {
     final int WIDTH = 16;
     final int HEIGHT = 16;
@@ -14,6 +14,7 @@ abstract class Bomber
 
     public abstract void update();
 
+    @Override
     public void faceDirection(Direction direction)
     {
         if (this.direction == direction)
